@@ -1,7 +1,7 @@
 # ZYWStock
 iOS下K线图的绘制，放大缩小，长按高亮
 如果ZYWChart帮到了你，欢迎star或fork 😄 O(∩_∩)O~~ 😄
-[](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo1.gif)
+![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo1.gif)
 ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/img1.png)
 ## 特点:
 - 采用 CAShapeLayer + UIBezierPath绘制，绘制效率高，占用内存低
