@@ -1,0 +1,35 @@
+//
+//  ZYWChart-Prefix.pch
+//  ZYWChart
+//
+//  Created by 张有为 on 2016/12/17.
+//  Copyright © 2016年 zyw113. All rights reserved.
+//
+
+#ifndef ZYWChart_Prefix_pch
+#define ZYWChart_Prefix_pch
+
+#ifdef __OBJC__
+
+#import "Masonry.h"
+#import "ZYWLineModel.h"
+#import "UIBezierPath+Draw.h"
+#import "UIColor+YW.h"
+#import "UIView+Extension.h"
+#import "ZYWBaseChartView.h"
+#import "ZYWCandleModel.h"
+
+#define DEVICE_HEIGHT [UIScreen mainScreen].bounds.size.height
+#define DEVICE_WIDTH [UIScreen mainScreen].bounds.size.width
+
+#define widthradio DEVICE_WIDTH/375
+#define heightradio DEVICE_HEIGHT/667
+
+#define RoseColor  [UIColor colorWithHexString:@"f05b72"]
+#define DropColor  [UIColor colorWithHexString:@"7fb80e"]
+
+#define ContentOffSet @"contentOffset"
+
+#endif
+
+#endif /* ZYWChart_Prefix_pch */

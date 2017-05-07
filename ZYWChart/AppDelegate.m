@@ -3,11 +3,12 @@
 //  ZYWChart
 //
 //  Created by 张有为 on 2016/12/17.
-//  Copyright © 2016年 张有为. All rights reserved.
+//  Copyright © 2016年 zyw113. All rights reserved.
 //
 
 #import "AppDelegate.h"
-
+#import "ViewController.h"
+#import "FHHFPSIndicator.h"
 @interface AppDelegate ()
 
 @end
@@ -17,6 +18,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [self.window makeKeyAndVisible];
+    
+#if defined(DEBUG) || defined(_DEBUG)
+    
+    [[FHHFPSIndicator sharedFPSIndicator] show];
+    
+#endif
+    
+    ViewController *Controller = [[ViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Controller];
+    self.window.rootViewController = nav;
+    
     return YES;
 }
 

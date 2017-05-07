@@ -3,7 +3,7 @@
 //  ZYWChartTests
 //
 //  Created by 张有为 on 2016/12/17.
-//  Copyright © 2016年 张有为. All rights reserved.
+//  Copyright © 2016年 zyw113. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
