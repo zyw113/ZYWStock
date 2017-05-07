@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -201,6 +202,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 =======
+=======
+>>>>>>> 84300d16c3cca4e7590ec6ecec1de26d0ac476a8
 MIT License
 
 Copyright (c) 2017 zyw113
@@ -222,4 +225,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+<<<<<<< HEAD
 >>>>>>> db9ab269599520ed55781b7d0821f0a6ce7b8b8f
+=======
+>>>>>>> 84300d16c3cca4e7590ec6ecec1de26d0ac476a8

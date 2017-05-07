@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # ZYWChart
 =======
 # ZYWStock
@@ -22,3 +23,7 @@ iOS下K线图的绘制，放大缩小，长按高亮
 - 如果ZYWChart帮到了你，欢迎star或fork 😄 O(∩_∩)O~~ 😄
 ## License
 - Released under MIT License.
+=======
+# ZYWStock
+iOS K线图
+>>>>>>> 84300d16c3cca4e7590ec6ecec1de26d0ac476a8
