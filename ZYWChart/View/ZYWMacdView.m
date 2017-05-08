@@ -21,8 +21,6 @@ static inline bool isEqualZero(float value)
 @property (nonatomic,strong) NSMutableArray *macdArray;
 @property (nonatomic,strong) NSMutableArray *deaArray;
 @property (nonatomic,strong) NSMutableArray *diffArray;
-@property (nonatomic,strong) CAShapeLayer   *deaLayer;
-@property (nonatomic,strong) CAShapeLayer   *diffLayer;
 @property (nonatomic,strong) CAShapeLayer   *macdLayer;
 
 @end
@@ -119,24 +117,28 @@ static inline bool isEqualZero(float value)
 
 -(void)drawLine
 {
-    UIBezierPath *deaPath = [UIBezierPath drawLine:self.deaArray];
-    self.deaLayer.path = deaPath.CGPath;
-    self.deaLayer.strokeColor = [UIColor redColor].CGColor;
-    self.deaLayer.fillColor = [[UIColor clearColor] CGColor];
-    self.deaLayer.contentsScale = [UIScreen mainScreen].scale;
-    
-    UIBezierPath *diffPath = [UIBezierPath drawLine:self.diffArray];
-    self.diffLayer.path = diffPath.CGPath;
-    self.diffLayer.strokeColor = [UIColor blackColor].CGColor;
-    self.diffLayer.fillColor = [[UIColor clearColor] CGColor];
-    self.diffLayer.contentsScale = [UIScreen mainScreen].scale;
-
     __weak typeof(self) this = self;
     [_macdArray enumerateObjectsUsingBlock:^(ZYWMacdPostionModel* obj, NSUInteger idx, BOOL * _Nonnull stop) {
         ZYWMacdModel *model = this.displayArray[idx];
         CAShapeLayer *layer = [this drawMacdLayer:obj candleModel:model];
         [this.macdLayer addSublayer:layer];
     }];
+
+    UIBezierPath *deaPath = [UIBezierPath drawLine:self.deaArray];
+    CAShapeLayer *deaLayer = [CAShapeLayer layer];
+    deaLayer.path = deaPath.CGPath;
+    deaLayer.strokeColor = [UIColor redColor].CGColor;
+    deaLayer.fillColor = [[UIColor clearColor] CGColor];
+    deaLayer.contentsScale = [UIScreen mainScreen].scale;
+    [self.macdLayer addSublayer:deaLayer];
+    
+    UIBezierPath *diffPath = [UIBezierPath drawLine:self.diffArray];
+    CAShapeLayer *diffLayer = [CAShapeLayer layer];
+    diffLayer.path = diffPath.CGPath;
+    diffLayer.strokeColor = [UIColor blackColor].CGColor;
+    diffLayer.fillColor = [[UIColor clearColor] CGColor];
+    diffLayer.contentsScale = [UIScreen mainScreen].scale;
+    [self.macdLayer addSublayer:diffLayer];
 }
 
 -(void)removeFromSubLayer
@@ -147,15 +149,8 @@ static inline bool isEqualZero(float value)
         [layer removeFromSuperlayer];
         layer = nil;
     }
-    
-    [self.deaLayer removeFromSuperlayer];
-    self.deaLayer = nil;
-    
     [self.macdLayer removeFromSuperlayer];
     self.macdLayer = nil;
-    
-    [self.diffLayer removeFromSuperlayer];
-    self.diffLayer = nil;
 }
 
 -(void)removeAllObjectFromArray
@@ -173,8 +168,6 @@ static inline bool isEqualZero(float value)
 {
     if (!self.macdLayer.sublayers.count)
     {
-        [self.layer addSublayer:self.deaLayer];
-        [self.layer addSublayer:self.diffLayer];
         [self.layer addSublayer:self.macdLayer];
     }
 }
@@ -237,32 +230,6 @@ static inline bool isEqualZero(float value)
         _displayArray = [NSMutableArray array];
     }
     return _displayArray;
-}
-
--(CAShapeLayer*)deaLayer
-{
-    if (!_deaLayer)
-    {
-        _deaLayer = [CAShapeLayer layer];
-        _deaLayer.lineWidth = _lineWidth;
-        _deaLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
-        _deaLayer.strokeColor = [UIColor clearColor].CGColor;
-        _deaLayer.fillColor = [UIColor clearColor].CGColor;
-    }
-    return _deaLayer;
-}
-
--(CAShapeLayer*)diffLayer
-{
-    if (!_diffLayer)
-    {
-        _diffLayer = [CAShapeLayer layer];
-        _diffLayer.lineWidth = _lineWidth;
-        _diffLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
-        _diffLayer.strokeColor = [UIColor clearColor].CGColor;
-        _diffLayer.fillColor = [UIColor clearColor].CGColor;
-    }
-    return _diffLayer;
 }
 
 -(CAShapeLayer*)macdLayer
