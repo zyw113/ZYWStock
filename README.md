@@ -18,4 +18,4 @@
 ## Contact
 - 如果使用中发现问题欢迎添加 issue ，也欢迎 Pull request。
 ## License
-- Released under MIT License.
+- Released under Apache License.
