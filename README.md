@@ -1,5 +1,5 @@
 # ZYWStock
-- ZYWStock是iOS下K线图的绘制库。支持放大缩小，长按高亮, 流畅丝滑~~~
+- ZYWStock是iOS下K线图的绘制库。支持放大缩小，长按高亮, 横竖屏切换。流畅丝滑~~~
 - 如果刚好帮到了你，欢迎star fork 😄 O(∩_∩)O~~ 😄
 ## 
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo1.gif)
