@@ -1,12 +1,12 @@
 //
-//  CandleLineVC.m
+//  CandleCrossScreenVC.m
 //  ZYWChart
 //
-//  Created by 张有为 on 2016/12/28.
-//  Copyright © 2016年 zyw113. All rights reserved.
+//  Created by 张有为 on 2017/5/9.
+//  Copyright © 2017年 zyw113. All rights reserved.
 //
 
-#import "CandleLineVC.h"
+#import "CandleCrossScreenVC.h"
 #import "ZYWCandleChartView.h"
 #import "ZYWCandleModel.h"
 #import "ZYWTecnnicalView.h"
@@ -15,10 +15,9 @@
 #import "ZYWKdjLineView.h"
 #import "ZYWWrLineView.h"
 #import "ZYWPriceView.h"
-#import "ZYWQuotaView.h"
+#import "ZYWCrossPriceView.h"
 #import "ZYWCandleProtocol.h"
-#import "CandleCrossScreenVC.h"
-
+#import "UIView+Extension.h"
 typedef enum
 {
     MACD = 1,
@@ -28,15 +27,15 @@ typedef enum
 
 #define ScrollScale 0.98
 #define CandleChartScale 0.6
-#define TechnicalViewScale 0.05
-#define BottomViewScale 0.33
+#define TechnicalViewScale 0.1
+#define BottomViewScale 0.28
 
 #define MinCount 10
-#define MaxCount 30
+#define MaxCount 50
 
-@interface CandleLineVC ()<NSXMLParserDelegate,ZYWCandleProtocol,ZYWTecnnicalViewDelegate>
+@interface CandleCrossScreenVC () <NSXMLParserDelegate,ZYWCandleProtocol,ZYWTecnnicalViewDelegate>
 
-@property (nonatomic,strong) ZYWQuotaView *quotaView;
+@property (nonatomic,strong) ZYWCrossPriceView *quotaView;
 @property (nonatomic,strong) UIScrollView *scrollView;
 @property (nonatomic,strong) ZYWCandleChartView *candleChartView;
 @property (nonatomic,strong) NSMutableArray *dataSource;
@@ -59,7 +58,9 @@ typedef enum
 
 @end
 
-@implementation CandleLineVC
+@implementation CandleCrossScreenVC
+
+#pragma mark ------
 
 - (void)viewDidLoad
 {
@@ -78,13 +79,13 @@ typedef enum
 
 -(void)addQuotaView
 {
-    _quotaView = [ZYWQuotaView new];
-    _quotaView.backgroundColor = RoseColor;
+    _quotaView = [ZYWCrossPriceView new];
+    _quotaView.backgroundColor = DropColor;
     [self.view addSubview:_quotaView];
     [_quotaView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(@(64));
+        make.top.equalTo(@(20));
         make.left.right.equalTo(self.view);
-        make.height.equalTo(@(100));
+        make.height.equalTo(@(50));
     }];
 }
 
@@ -96,9 +97,9 @@ typedef enum
     _scrollView.backgroundColor = [UIColor whiteColor];
     [_scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_quotaView.mas_bottom);
-        make.left.equalTo(self.view.mas_left).offset(5);
-        make.right.equalTo(self.view.mas_right).offset(-60);
-        make.height.equalTo(@((DEVICE_HEIGHT - 64 - 100)*ScrollScale));
+        make.left.equalTo(@(5));
+        make.width.mas_equalTo( DEVICE_HEIGHT - 60 - 5);
+         make.height.mas_equalTo(DEVICE_WIDTH - 50 - 20);
     }];
 }
 
@@ -111,7 +112,7 @@ typedef enum
     [_candleChartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_scrollView);
         make.right.equalTo(_scrollView);
-        make.height.equalTo(@((DEVICE_HEIGHT - 64 - 100)*CandleChartScale));
+        make.height.equalTo(@((DEVICE_WIDTH - 70)*CandleChartScale));
         make.top.equalTo(_scrollView);
     }];
     
@@ -131,7 +132,7 @@ typedef enum
         make.top.equalTo(_scrollView.mas_top).offset(1*heightradio);
         make.left.equalTo(_scrollView.mas_left).offset(-1*widthradio);
         make.right.equalTo(_scrollView.mas_right).offset(1*widthradio);
-        make.height.equalTo(@((DEVICE_HEIGHT - 64 - 100)*CandleChartScale));
+        make.height.equalTo(@((DEVICE_WIDTH - 70)*CandleChartScale));
     }];
 }
 
@@ -144,7 +145,7 @@ typedef enum
     [_technicalView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_topBoxView.mas_bottom);
         make.left.right.equalTo(_scrollView);
-        make.height.equalTo(@((DEVICE_HEIGHT-64-100)*TechnicalViewScale));
+        make.height.equalTo(@((DEVICE_WIDTH-70)*TechnicalViewScale));
     }];
     
     [_technicalView.macdButton setTitle:@"MACD" forState:UIControlStateNormal];
@@ -159,7 +160,7 @@ typedef enum
     [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_technicalView.mas_bottom).offset(2*heightradio);
         make.left.right.equalTo(_candleChartView);
-        make.height.equalTo(@((DEVICE_HEIGHT- 64 - 100)*BottomViewScale));
+        make.height.equalTo(@((DEVICE_WIDTH-70)*BottomViewScale));
     }];
     [_bottomView layoutIfNeeded];
 }
@@ -175,7 +176,7 @@ typedef enum
         make.top.equalTo(_bottomView.mas_top).offset(-1*heightradio);
         make.left.equalTo(_scrollView.mas_left).offset(-1*widthradio);
         make.right.equalTo(_scrollView.mas_right).offset(1*widthradio);
-        make.height.equalTo(@((DEVICE_HEIGHT - 64 - 100)*BottomViewScale));
+        make.height.equalTo(@((DEVICE_WIDTH - 70)*BottomViewScale));
     }];
 }
 
@@ -186,7 +187,6 @@ typedef enum
     
     [_topPriceView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.equalTo(_topBoxView);
-        make.right.equalTo(self.view);
         make.left.equalTo(_topBoxView.mas_right);
     }];
     
@@ -195,7 +195,6 @@ typedef enum
     
     [_bottomPriceView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.equalTo(_bottomBoxView);
-        make.right.equalTo(self.view);
         make.left.equalTo(_bottomBoxView.mas_right);
     }];
 }
@@ -272,7 +271,7 @@ typedef enum
         make.bottom.equalTo(_macdView);
         make.left.equalTo(@(0));
     }];
-
+    
     self.leavView = [UIView new];
     self.leavView.clipsToBounds = YES;
     [self.scrollView addSubview:self.leavView];
@@ -325,7 +324,7 @@ typedef enum
         
         self.scrollView.scrollEnabled = NO;
         oldPositionX = location.x;
-
+        
         CGPoint point = [self.candleChartView getLongPressModelPostionWithXPostion:location.x];
         CGFloat xPositoin = point.x + (self.candleChartView.candleWidth)/2.f - self.candleChartView.candleSpace/2.f ;
         CGFloat yPositoin = point.y +_candleChartView.topMargin;
@@ -365,9 +364,9 @@ typedef enum
 {
     if (pinchPress.numberOfTouches < 2)
     {
-         _candleChartView.kvoEnable = YES;
-         _scrollView.scrollEnabled = YES;
-          return;
+        _candleChartView.kvoEnable = YES;
+        _scrollView.scrollEnabled = YES;
+        return;
     }
     
     switch (pinchPress.state) {
@@ -400,7 +399,7 @@ typedef enum
         NSInteger pinCenterLeftCount = scrollViewPinCenterX / (_candleChartView.candleWidth + _candleChartView.candleSpace);
         pinCenterLeftCount = _candleChartView.currentStartIndex;
         CGFloat newDisplayCount = diffScale > 0 ? (displayCount-1) : (1 + displayCount);
-     
+        
         if (newDisplayCount+pinCenterLeftCount > _candleChartView.dataArray.count)
         {
             newDisplayCount = _candleChartView.dataArray.count - pinCenterLeftCount;
@@ -430,8 +429,7 @@ typedef enum
 
 -(void)tapGesture:(UITapGestureRecognizer*)tapGesture
 {
-    CandleCrossScreenVC *vc = [CandleCrossScreenVC new];
-    [self presentViewController:vc animated:YES completion:^{
+    [self dismissViewControllerAnimated:YES completion:^{
         
     }];
 }
@@ -451,15 +449,15 @@ typedef enum
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
 {
-       if ([elementName isEqualToString:@"item"])
-       {
-           ZYWCandleModel *data = [[ZYWCandleModel alloc] init];
-           data.open = [[attributeDict objectForKey:@"open"] floatValue];
-           data.high = [[attributeDict objectForKey:@"high"] floatValue];
-           data.low =  [[attributeDict objectForKey:@"low"] floatValue];
-           data.close = [[attributeDict objectForKey:@"close"] floatValue];
-           data.date = [attributeDict objectForKey:@"date"];
-           self.model = data;
+    if ([elementName isEqualToString:@"item"])
+    {
+        ZYWCandleModel *data = [[ZYWCandleModel alloc] init];
+        data.open = [[attributeDict objectForKey:@"open"] floatValue];
+        data.high = [[attributeDict objectForKey:@"high"] floatValue];
+        data.low =  [[attributeDict objectForKey:@"low"] floatValue];
+        data.close = [[attributeDict objectForKey:@"close"] floatValue];
+        data.date = [attributeDict objectForKey:@"date"];
+        self.model = data;
     }
 }
 
@@ -478,7 +476,7 @@ typedef enum
 {
     NSMutableArray * newMarray = [NSMutableArray array];
     NSEnumerator * enumerator = [self.dataSource reverseObjectEnumerator];
-
+    
     id object;
     while (object = [enumerator nextObject])
     {
@@ -494,7 +492,7 @@ typedef enum
         _kdjLineView.dataArray = computeKDJData(array).mutableCopy;
         _wrLineView.dataArray = computeWRData(array,10).mutableCopy;
         NSInteger count = self.candleChartView.displayCount;
-        NSInteger index = count / 3;
+        NSInteger index = count / 5;
         
         for (NSInteger i = 0;i<array.count;i++)
         {
@@ -504,11 +502,10 @@ typedef enum
                 model.isDrawDate = YES;
             }
         }
-        
         self.candleChartView.dataArray = array;
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-           [self.candleChartView stockFill];
+            [self.candleChartView stockFill];
         });
     });
 }
@@ -522,7 +519,7 @@ typedef enum
 
 -(void)kLineMainViewLongPressKLinePositionModel:(NSInteger)kLineModeIndex kLineModel:(ZYWCandleModel *)kLineModel
 {
-     _quotaView.model = kLineModel;
+    _quotaView.model = kLineModel;
 }
 
 -(void)displayScreenleftPostion:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count
@@ -546,7 +543,7 @@ typedef enum
         _macdView.leftPostion = leftPostion;
         _macdView.startIndex = index;
         _macdView.displayCount = count;
-         [_macdView stockFill];
+        [_macdView stockFill];
         
         _bottomPriceView.maxPriceLabel.text = [NSString stringWithFormat:@"%.2f",self.macdView.maxY];
         _bottomPriceView.middlePriceLabel.text = [NSString stringWithFormat:@"%.2f",(self.macdView.maxY - self.macdView.minY)/2 + self.macdView.minY];
@@ -591,18 +588,19 @@ typedef enum
 -(void)displayMoreData
 {
     NSLog(@"没有更多数据了");
- /*---实现右滑加载加载更多注意点--*/
-/*
- 1. 重新设置数据源
- 2. 调用 reloadData:(NSMutableArray*)array 方法
- 3. 设置scrollView的偏移量 self.scrollView.contentOffset = CGPointMake( self.candleChartView.previousOffsetX, 0);
- */
+    /*---实现右滑加载加载更多注意点--*/
+    /*
+     1. 重新设置数据源
+     2. 调用 reloadData:(NSMutableArray*)array 方法
+     3. 设置scrollView的偏移量 self.scrollView.contentOffset = CGPointMake( self.candleChartView.previousOffsetX, 0);
+     */
 }
 
 #pragma mark 屏幕相关
 
--(UIInterfaceOrientationMask)supportedInterfaceOrientations{
-    return UIInterfaceOrientationMaskLandscape;
+- (BOOL)prefersStatusBarHidden
+{
+    return NO;
 }
 
 - (BOOL)shouldAutorotate
@@ -612,13 +610,29 @@ typedef enum
 
 -(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    return UIInterfaceOrientationPortrait;
+    return UIInterfaceOrientationLandscapeRight;
+}
+
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskLandscapeRight;
 }
 
 #pragma mark Memory
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end

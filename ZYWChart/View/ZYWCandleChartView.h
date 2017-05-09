@@ -13,7 +13,7 @@
 @interface ZYWCandleChartView : ZYWBaseChartView<ZYWCandleProtocol>
 
 /**
- 数据源数组 在调用绘制方法之前设置 。Demo中数据源个数是固定的，如需实现类似右拉加载更多效果(参考网易贵金属)，需要在每次添加数据的时候设置 然后调用绘制方法
+ 数据源数组 在调用绘制方法之前设置 。Demo中数据源个数是固定的，如需实现类似右拉加载更多效果(参考网易贵金属)，需要在每次添加数据的时候设置 然后调用绘制方法 (现在本地数据是重复的6组)
  */
 @property (nonatomic,strong) NSMutableArray<__kindof ZYWCandleModel*> *dataArray;
 

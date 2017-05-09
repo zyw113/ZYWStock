@@ -16,4 +16,5 @@
 @property (assign, nonatomic) CGFloat close;
 @property (copy,   nonatomic) NSString *date;
 @property (assign, nonatomic) BOOL isDrawDate;
+
 @end

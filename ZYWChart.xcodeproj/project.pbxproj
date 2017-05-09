@@ -187,6 +187,9 @@
 		423943241E2B6D0300F2A873 /* ta_WCLPRICE.c in Sources */ = {isa = PBXBuildFile; fileRef = 4239427E1E2B6D0300F2A873 /* ta_WCLPRICE.c */; };
 		423943251E2B6D0300F2A873 /* ta_WILLR.c in Sources */ = {isa = PBXBuildFile; fileRef = 4239427F1E2B6D0300F2A873 /* ta_WILLR.c */; };
 		423943261E2B6D0300F2A873 /* ta_WMA.c in Sources */ = {isa = PBXBuildFile; fileRef = 423942801E2B6D0300F2A873 /* ta_WMA.c */; };
+		423B9A2B1EC15EE300A2B49A /* CandleCrossScreenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B9A2A1EC15EE300A2B49A /* CandleCrossScreenVC.m */; };
+		423B9A301EC18BD800A2B49A /* ZYWCrossPriceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B9A2F1EC18BD800A2B49A /* ZYWCrossPriceView.m */; };
+		4242362A1EC1ED8400C161A8 /* N225.xml in Resources */ = {isa = PBXBuildFile; fileRef = 424236291EC1ED8300C161A8 /* N225.xml */; };
 		4248A0441EBC485A0086EAA7 /* ZYWBaseChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4248A0341EBC485A0086EAA7 /* ZYWBaseChartView.m */; };
 		4248A0451EBC485A0086EAA7 /* ZYWCandleChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4248A0361EBC485A0086EAA7 /* ZYWCandleChartView.m */; };
 		4248A0461EBC485A0086EAA7 /* ZYWKdjLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4248A0391EBC485A0086EAA7 /* ZYWKdjLineView.m */; };
@@ -205,7 +208,6 @@
 		4274010F1E768B2300864702 /* ZYWMacdPostionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4274010E1E768B2300864702 /* ZYWMacdPostionModel.m */; };
 		4276AC451EA8B82600FD3986 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 4276AC441EA8B82600FD3986 /* UIView+Extension.m */; };
 		42E7292F1E13C80200682B3E /* ZYWCandleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E7292E1E13C80200682B3E /* ZYWCandleModel.m */; };
-		42E729311E13CAA800682B3E /* N225.xml in Resources */ = {isa = PBXBuildFile; fileRef = 42E729301E13CAA800682B3E /* N225.xml */; };
 		42E729341E13CAF200682B3E /* CandleLineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E729331E13CAF200682B3E /* CandleLineVC.m */; };
 		79715BAE312AE6B07031DB82 /* libPods-ZYWChart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E2B8C997449299EE5E08697 /* libPods-ZYWChart.a */; };
 /* End PBXBuildFile section */
@@ -435,6 +437,11 @@
 		4239427E1E2B6D0300F2A873 /* ta_WCLPRICE.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ta_WCLPRICE.c; sourceTree = "<group>"; };
 		4239427F1E2B6D0300F2A873 /* ta_WILLR.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ta_WILLR.c; sourceTree = "<group>"; };
 		423942801E2B6D0300F2A873 /* ta_WMA.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ta_WMA.c; sourceTree = "<group>"; };
+		423B9A291EC15EE300A2B49A /* CandleCrossScreenVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CandleCrossScreenVC.h; sourceTree = "<group>"; };
+		423B9A2A1EC15EE300A2B49A /* CandleCrossScreenVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CandleCrossScreenVC.m; sourceTree = "<group>"; };
+		423B9A2E1EC18BD800A2B49A /* ZYWCrossPriceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWCrossPriceView.h; sourceTree = "<group>"; };
+		423B9A2F1EC18BD800A2B49A /* ZYWCrossPriceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWCrossPriceView.m; sourceTree = "<group>"; };
+		424236291EC1ED8300C161A8 /* N225.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = N225.xml; sourceTree = "<group>"; };
 		4248A0331EBC485A0086EAA7 /* ZYWBaseChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWBaseChartView.h; sourceTree = "<group>"; };
 		4248A0341EBC485A0086EAA7 /* ZYWBaseChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWBaseChartView.m; sourceTree = "<group>"; };
 		4248A0351EBC485A0086EAA7 /* ZYWCandleChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWCandleChartView.h; sourceTree = "<group>"; };
@@ -472,7 +479,6 @@
 		4276AC441EA8B82600FD3986 /* UIView+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Extension.m"; sourceTree = "<group>"; };
 		42E7292D1E13C80200682B3E /* ZYWCandleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWCandleModel.h; sourceTree = "<group>"; };
 		42E7292E1E13C80200682B3E /* ZYWCandleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWCandleModel.m; sourceTree = "<group>"; };
-		42E729301E13CAA800682B3E /* N225.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = N225.xml; sourceTree = "<group>"; };
 		42E729321E13CAF200682B3E /* CandleLineVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CandleLineVC.h; sourceTree = "<group>"; };
 		42E729331E13CAF200682B3E /* CandleLineVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CandleLineVC.m; sourceTree = "<group>"; };
 		4F7C1CFF0292A45235298718 /* Pods-ZYWChart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZYWChart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZYWChart/Pods-ZYWChart.debug.xcconfig"; sourceTree = "<group>"; };
@@ -566,7 +572,7 @@
 				4227878C1E04F18600DB5CEC /* Assets.xcassets */,
 				4227878E1E04F18600DB5CEC /* LaunchScreen.storyboard */,
 				422787911E04F18600DB5CEC /* Info.plist */,
-				42E729301E13CAA800682B3E /* N225.xml */,
+				424236291EC1ED8300C161A8 /* N225.xml */,
 				422787801E04F18600DB5CEC /* Supporting Files */,
 			);
 			path = ZYWChart;
@@ -610,6 +616,8 @@
 				42E729331E13CAF200682B3E /* CandleLineVC.m */,
 				4248A04C1EBC80E20086EAA7 /* TimeLineVC.h */,
 				4248A04D1EBC80E20086EAA7 /* TimeLineVC.m */,
+				423B9A291EC15EE300A2B49A /* CandleCrossScreenVC.h */,
+				423B9A2A1EC15EE300A2B49A /* CandleCrossScreenVC.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -878,6 +886,8 @@
 				42619B141EBAD23D00A4CACC /* ZYWPriceView.m */,
 				42619B151EBAD23D00A4CACC /* ZYWQuotaView.h */,
 				42619B161EBAD23D00A4CACC /* ZYWQuotaView.m */,
+				423B9A2E1EC18BD800A2B49A /* ZYWCrossPriceView.h */,
+				423B9A2F1EC18BD800A2B49A /* ZYWCrossPriceView.m */,
 			);
 			path = PriceView;
 			sourceTree = "<group>";
@@ -1024,7 +1034,7 @@
 			files = (
 				422787901E04F18600DB5CEC /* LaunchScreen.storyboard in Resources */,
 				4227878D1E04F18600DB5CEC /* Assets.xcassets in Resources */,
-				42E729311E13CAA800682B3E /* N225.xml in Resources */,
+				4242362A1EC1ED8400C161A8 /* N225.xml in Resources */,
 				423942841E2B6D0300F2A873 /* ta_retcode.csv in Resources */,
 				4227878B1E04F18600DB5CEC /* Main.storyboard in Resources */,
 			);
@@ -1141,6 +1151,7 @@
 				4248A0461EBC485A0086EAA7 /* ZYWKdjLineView.m in Sources */,
 				423942AF1E2B6D0300F2A873 /* ta_CDLHANGINGMAN.c in Sources */,
 				4248A04E1EBC80E20086EAA7 /* TimeLineVC.m in Sources */,
+				423B9A301EC18BD800A2B49A /* ZYWCrossPriceView.m in Sources */,
 				423942C91E2B6D0300F2A873 /* ta_CDLSHORTLINE.c in Sources */,
 				423942991E2B6D0300F2A873 /* ta_CDL3INSIDE.c in Sources */,
 				423943141E2B6D0300F2A873 /* ta_STOCHF.c in Sources */,
@@ -1159,6 +1170,7 @@
 				4239430E1E2B6D0300F2A873 /* ta_SIN.c in Sources */,
 				423942F01E2B6D0300F2A873 /* ta_MAMA.c in Sources */,
 				423942B21E2B6D0300F2A873 /* ta_CDLHIGHWAVE.c in Sources */,
+				423B9A2B1EC15EE300A2B49A /* CandleCrossScreenVC.m in Sources */,
 				423942861E2B6D0300F2A873 /* ta_ACOS.c in Sources */,
 				4248A04A1EBC485A0086EAA7 /* ZYWTecnnicalView.m in Sources */,
 				4248A0451EBC485A0086EAA7 /* ZYWCandleChartView.m in Sources */,

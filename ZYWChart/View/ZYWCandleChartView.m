@@ -127,7 +127,6 @@ static inline bool isEqualZero(float value)
     [maLines addObject:computeMAData(array,5)];
     [maLines addObject:computeMAData(array,10)];
     [maLines addObject:computeMAData(array,25)];
-    
     for (NSInteger i = 0;i<maLines.count;i++)
     {
         ZYWLineData *lineData = [maLines objectAtIndex:i];
@@ -242,13 +241,6 @@ static inline bool isEqualZero(float value)
         [layer removeFromSuperlayer];
         layer = nil;
     }
-    
-    for (NSInteger i =0;i<self.layer.sublayers.count;i++)
-    {
-        id layer = self.layer.sublayers[i];
-        [layer removeFromSuperlayer];
-        layer = nil;
-    }
 }
 
 - (void)initLayer
@@ -288,7 +280,6 @@ static inline bool isEqualZero(float value)
     if (self.ma5LineLayer)
     {
         [self.ma5LineLayer removeFromSuperlayer];
-        self.ma5LineLayer = nil;
     }
     
     if (!self.ma5LineLayer)
@@ -305,7 +296,6 @@ static inline bool isEqualZero(float value)
     if (self.ma10LineLayer)
     {
         [self.ma10LineLayer removeFromSuperlayer];
-        self.ma10LineLayer = nil;
     }
     
     if (!self.ma10LineLayer)
@@ -322,7 +312,6 @@ static inline bool isEqualZero(float value)
     if (self.ma25LineLayer)
     {
         [self.ma25LineLayer removeFromSuperlayer];
-        self.ma25LineLayer = nil;
     }
     
     if (!self.ma25LineLayer)
@@ -382,22 +371,26 @@ static inline bool isEqualZero(float value)
 -(void)drawMALineLayer
 {
     NSMutableArray *pathsArray = [UIBezierPath drawLines:self.maPostionArray];
+
+    ZYWLineModel *ma5Model = self.maPostionArray[0][0];
+    ZYWLineModel *ma10Model = self.maPostionArray[1][0];
+    ZYWLineModel *ma25Model = self.maPostionArray[2][0];
     
     UIBezierPath *ma5Path = pathsArray[0];
     self.ma5LineLayer.path = ma5Path.CGPath;
-    self.ma5LineLayer.strokeColor = [UIColor redColor].CGColor;
+    self.ma5LineLayer.strokeColor = ma5Model.lineColor.CGColor;
     self.ma5LineLayer.fillColor = [[UIColor clearColor] CGColor];
     self.ma5LineLayer.contentsScale = [UIScreen mainScreen].scale;
     
     UIBezierPath *ma10Path = pathsArray[1];
     self.ma10LineLayer.path = ma10Path.CGPath;
-    self.ma10LineLayer.strokeColor = [UIColor redColor].CGColor;
+    self.ma10LineLayer.strokeColor = ma10Model.lineColor.CGColor;
     self.ma10LineLayer.fillColor = [[UIColor clearColor] CGColor];
     self.ma10LineLayer.contentsScale = [UIScreen mainScreen].scale;
     
     UIBezierPath *ma25Path = pathsArray[2];
     self.ma25LineLayer.path = ma25Path.CGPath;
-    self.ma25LineLayer.strokeColor = [UIColor redColor].CGColor;
+    self.ma25LineLayer.strokeColor = ma25Model.lineColor.CGColor;
     self.ma25LineLayer.fillColor = [[UIColor clearColor] CGColor];
     self.ma25LineLayer.contentsScale = [UIScreen mainScreen].scale;
 }
@@ -410,27 +403,15 @@ static inline bool isEqualZero(float value)
 
 -(void)drawTimeLayer
 {
-    for (NSInteger i = 0;i<self.currentPostionArray.count;i++)
-    {
-        ZYWCandlePostionModel *model = self.currentPostionArray[i];
+    [self.currentPostionArray enumerateObjectsUsingBlock:^(ZYWCandlePostionModel *model, NSUInteger idx, BOOL * _Nonnull stop) {
         if (model.isDrawDate)
         {
-            //时间上面的线
-            CAShapeLayer *bottomLayer = [self getAxispLayer];
-            bottomLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
-            bottomLayer.lineWidth = self.lineWidth;
-            UIBezierPath *bpath = [UIBezierPath bezierPath];
-            [bpath moveToPoint:CGPointMake(0, self.height - self.timeLayerHeight - self.bottomMargin)];
-            [bpath addLineToPoint:CGPointMake(self.width, self.height - self.timeLayerHeight - self.bottomMargin)];
-            bottomLayer.path = bpath.CGPath;
-            [self.timeLayer addSublayer:bottomLayer];
-            
             //时间
             CATextLayer *layer = [self getTextLayer];
             layer.string = model.date;
             if (isEqualZero(model.highPoint.x))
             {
-                 layer.frame =  CGRectMake(0, self.height - self.timeLayerHeight - self.bottomMargin, 60, self.timeLayerHeight);
+                layer.frame =  CGRectMake(0, self.height - self.timeLayerHeight - self.bottomMargin, 60, self.timeLayerHeight);
             }
             
             else
@@ -442,29 +423,39 @@ static inline bool isEqualZero(float value)
             
             //时间线
             CAShapeLayer *lineLayer = [self getAxispLayer];
-            lineLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
+            lineLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), self.lineWidth);
             UIBezierPath *path = [UIBezierPath bezierPath];
             path.lineWidth = self.lineWidth;
             lineLayer.lineWidth = self.lineWidth;
-         
+            
             [path moveToPoint:CGPointMake(model.highPoint.x + self.candleWidth/2 - self.lineWidth/2, 1*heightradio)];
             [path addLineToPoint:CGPointMake(model.highPoint.x + self.candleWidth/2 - self.lineWidth/2 ,self.height - self.timeLayerHeight - self.bottomMargin)];
             lineLayer.path = path.CGPath;
             [self.timeLayer addSublayer:lineLayer];
         }
-    }
+    }];
 }
 
 -(void)drawAxisLine
 {
+    CGFloat klineWidth = (self.dataArray.count)*self.candleWidth+self.candleSpace*(self.dataArray.count);
+    CAShapeLayer *bottomLayer = [self getAxispLayer];
+    bottomLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame),  CGRectGetHeight(self.frame));
+    bottomLayer.lineWidth = self.lineWidth;
+    UIBezierPath *bpath = [UIBezierPath bezierPath];
+    [bpath moveToPoint:CGPointMake(0, self.height - self.timeLayerHeight - self.bottomMargin)];
+    [bpath addLineToPoint:CGPointMake(self.width, self.height - self.timeLayerHeight - self.bottomMargin)];
+    bottomLayer.path = bpath.CGPath;
+    [self.timeLayer addSublayer:bottomLayer];
+    
     CAShapeLayer *centXLayer = [self getAxispLayer];
-    centXLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
+    centXLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame),  CGRectGetHeight(self.frame));
     UIBezierPath *xPath = [UIBezierPath bezierPath];
     [xPath moveToPoint:CGPointMake(0,self.centerY)];
-    [xPath addLineToPoint:CGPointMake(self.width,self.centerY)];
+    [xPath addLineToPoint:CGPointMake(klineWidth,self.centerY)];
     centXLayer.path = xPath.CGPath;
     centXLayer.lineWidth = self.lineWidth;
-    [self.layer addSublayer:centXLayer];
+    [self.timeLayer addSublayer:centXLayer];
 }
 
 -(void)stockFill
@@ -475,7 +466,6 @@ static inline bool isEqualZero(float value)
     [self calcuteCandleWidth];
     [self updateWidth];
     [self drawKLine];
-    [self drawMALayer];
 }
 
 #pragma mark publicMethod
@@ -496,9 +486,9 @@ static inline bool isEqualZero(float value)
     CAShapeLayer *layer = [CAShapeLayer layer];
     layer.strokeColor = [UIColor colorWithHexString:@"ededed"].CGColor;
     layer.fillColor = [[UIColor clearColor] CGColor];
-    [layer setLineDashPattern:
-     [NSArray arrayWithObjects:[NSNumber numberWithInt:2],
-      [NSNumber numberWithInt:1],nil]];
+//    [layer setLineDashPattern:
+//     [NSArray arrayWithObjects:[NSNumber numberWithInt:2],
+//      [NSNumber numberWithInt:1],nil]];
     layer.contentsScale = [UIScreen mainScreen].scale;
     return layer;
 }
