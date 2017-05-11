@@ -19,5 +19,6 @@
 ```
 ## Contact
 - 如果使用中发现问题欢迎添加 issue ，也欢迎 Pull request。
+- QQ群:640138789 (欢迎大家积极加群)
 ## License
 - Released under Apache Licence 2.0.
