@@ -25,7 +25,7 @@
     [self.view addSubview:_tableView];
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _dataSourceArray = @[@"LineVC",@"SlipLineVC",@"CandleLineVC"];
+    _dataSourceArray = @[@"LineVC",@"SlipLineVC",@"CandleLineVC",@"TimeLineVC"];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

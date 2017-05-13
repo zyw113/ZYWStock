@@ -21,6 +21,8 @@
 		422787901E04F18600DB5CEC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4227878E1E04F18600DB5CEC /* LaunchScreen.storyboard */; };
 		4227879B1E04F18600DB5CEC /* ZYWChartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4227879A1E04F18600DB5CEC /* ZYWChartTests.m */; };
 		422787A61E04F18600DB5CEC /* ZYWChartUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 422787A51E04F18600DB5CEC /* ZYWChartUITests.m */; };
+		422BF0BA1EC7081400DF8F4A /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 422BF0B91EC7081400DF8F4A /* data.plist */; };
+		422BF0BD1EC70C0100DF8F4A /* ZYWTimeLineModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 422BF0BC1EC70C0100DF8F4A /* ZYWTimeLineModel.m */; };
 		423941CA1E2B1BE500F2A873 /* ZYWCandlePostionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 423941C91E2B1BE500F2A873 /* ZYWCandlePostionModel.m */; };
 		423942821E2B6D0300F2A873 /* ta_global.c in Sources */ = {isa = PBXBuildFile; fileRef = 423941D61E2B6D0200F2A873 /* ta_global.c */; };
 		423942831E2B6D0300F2A873 /* ta_retcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 423941DB1E2B6D0200F2A873 /* ta_retcode.c */; };
@@ -201,6 +203,7 @@
 		4248A04E1EBC80E20086EAA7 /* TimeLineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4248A04D1EBC80E20086EAA7 /* TimeLineVC.m */; };
 		42619B171EBAD23D00A4CACC /* ZYWPriceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42619B141EBAD23D00A4CACC /* ZYWPriceView.m */; };
 		42619B181EBAD23D00A4CACC /* ZYWQuotaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42619B161EBAD23D00A4CACC /* ZYWQuotaView.m */; };
+		42637BA31EC432E4005D8ACD /* ZYWTimeLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42637BA21EC432E4005D8ACD /* ZYWTimeLineView.m */; };
 		4263A03D1E98D6A5009BE7F7 /* UIBezierPath+Draw.m in Sources */ = {isa = PBXBuildFile; fileRef = 4263A03C1E98D6A5009BE7F7 /* UIBezierPath+Draw.m */; };
 		4264501C1EA7680900B792A6 /* UIColor+YW.m in Sources */ = {isa = PBXBuildFile; fileRef = 4264501B1EA7680900B792A6 /* UIColor+YW.m */; };
 		427401061E76735800864702 /* ZYWLineUntil.m in Sources */ = {isa = PBXBuildFile; fileRef = 427401051E76735800864702 /* ZYWLineUntil.m */; };
@@ -260,6 +263,9 @@
 		422787A51E04F18600DB5CEC /* ZYWChartUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZYWChartUITests.m; sourceTree = "<group>"; };
 		422787A71E04F18600DB5CEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		422787C31E04FD3700DB5CEC /* ZYWChart-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZYWChart-Prefix.pch"; sourceTree = "<group>"; };
+		422BF0B91EC7081400DF8F4A /* data.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
+		422BF0BB1EC70C0100DF8F4A /* ZYWTimeLineModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWTimeLineModel.h; sourceTree = "<group>"; };
+		422BF0BC1EC70C0100DF8F4A /* ZYWTimeLineModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWTimeLineModel.m; sourceTree = "<group>"; };
 		423941C81E2B1BE500F2A873 /* ZYWCandlePostionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWCandlePostionModel.h; sourceTree = "<group>"; };
 		423941C91E2B1BE500F2A873 /* ZYWCandlePostionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWCandlePostionModel.m; sourceTree = "<group>"; };
 		423941CF1E2B6D0200F2A873 /* ta_abstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ta_abstract.h; sourceTree = "<group>"; };
@@ -465,6 +471,8 @@
 		42619B141EBAD23D00A4CACC /* ZYWPriceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWPriceView.m; sourceTree = "<group>"; };
 		42619B151EBAD23D00A4CACC /* ZYWQuotaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWQuotaView.h; sourceTree = "<group>"; };
 		42619B161EBAD23D00A4CACC /* ZYWQuotaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWQuotaView.m; sourceTree = "<group>"; };
+		42637BA11EC432E4005D8ACD /* ZYWTimeLineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWTimeLineView.h; sourceTree = "<group>"; };
+		42637BA21EC432E4005D8ACD /* ZYWTimeLineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWTimeLineView.m; sourceTree = "<group>"; };
 		4263A03B1E98D6A5009BE7F7 /* UIBezierPath+Draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Draw.h"; sourceTree = "<group>"; };
 		4263A03C1E98D6A5009BE7F7 /* UIBezierPath+Draw.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Draw.m"; sourceTree = "<group>"; };
 		4264501A1EA7680900B792A6 /* UIColor+YW.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+YW.h"; sourceTree = "<group>"; };
@@ -528,6 +536,8 @@
 				4274010B1E76871500864702 /* ZYWMacdModel.m */,
 				4274010D1E768B2300864702 /* ZYWMacdPostionModel.h */,
 				4274010E1E768B2300864702 /* ZYWMacdPostionModel.m */,
+				422BF0BB1EC70C0100DF8F4A /* ZYWTimeLineModel.h */,
+				422BF0BC1EC70C0100DF8F4A /* ZYWTimeLineModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -573,6 +583,7 @@
 				4227878E1E04F18600DB5CEC /* LaunchScreen.storyboard */,
 				422787911E04F18600DB5CEC /* Info.plist */,
 				424236291EC1ED8300C161A8 /* N225.xml */,
+				422BF0B91EC7081400DF8F4A /* data.plist */,
 				422787801E04F18600DB5CEC /* Supporting Files */,
 			);
 			path = ZYWChart;
@@ -875,6 +886,8 @@
 				4248A0411EBC485A0086EAA7 /* ZYWTecnnicalView.m */,
 				4248A0421EBC485A0086EAA7 /* ZYWWrLineView.h */,
 				4248A0431EBC485A0086EAA7 /* ZYWWrLineView.m */,
+				42637BA11EC432E4005D8ACD /* ZYWTimeLineView.h */,
+				42637BA21EC432E4005D8ACD /* ZYWTimeLineView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1032,6 +1045,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				422BF0BA1EC7081400DF8F4A /* data.plist in Resources */,
 				422787901E04F18600DB5CEC /* LaunchScreen.storyboard in Resources */,
 				4227878D1E04F18600DB5CEC /* Assets.xcassets in Resources */,
 				4242362A1EC1ED8400C161A8 /* N225.xml in Resources */,
@@ -1198,6 +1212,7 @@
 				423943191E2B6D0300F2A873 /* ta_TAN.c in Sources */,
 				4239428C1E2B6D0300F2A873 /* ta_APO.c in Sources */,
 				423942B71E2B6D0300F2A873 /* ta_CDLINNECK.c in Sources */,
+				422BF0BD1EC70C0100DF8F4A /* ZYWTimeLineModel.m in Sources */,
 				423942AD1E2B6D0300F2A873 /* ta_CDLGRAVESTONEDOJI.c in Sources */,
 				423943101E2B6D0300F2A873 /* ta_SMA.c in Sources */,
 				423942A91E2B6D0300F2A873 /* ta_CDLENGULFING.c in Sources */,
@@ -1221,6 +1236,7 @@
 				4239430D1E2B6D0300F2A873 /* ta_SAREXT.c in Sources */,
 				4239431C1E2B6D0300F2A873 /* ta_TRANGE.c in Sources */,
 				423942C41E2B6D0300F2A873 /* ta_CDLPIERCING.c in Sources */,
+				42637BA31EC432E4005D8ACD /* ZYWTimeLineView.m in Sources */,
 				423942E01E2B6D0300F2A873 /* ta_HT_DCPHASE.c in Sources */,
 				423942B81E2B6D0300F2A873 /* ta_CDLINVERTEDHAMMER.c in Sources */,
 				423942DC1E2B6D0300F2A873 /* ta_EMA.c in Sources */,

@@ -115,7 +115,7 @@ typedef enum
         make.height.equalTo(@((DEVICE_WIDTH - 70)*CandleChartScale));
         make.top.equalTo(_scrollView);
     }];
-    
+    _candleChartView.isAutoSetterWidth = YES;
     _candleChartView.candleSpace = 2;
     _candleChartView.displayCount = 25;
     _candleChartView.lineWidth = 1*widthradio;

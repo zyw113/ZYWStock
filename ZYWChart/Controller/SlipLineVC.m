@@ -21,6 +21,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.title  = @"滑动折线图";
     self.automaticallyAdjustsScrollViewInsets = NO;
     // Do any additional setup after loading the view.
     _scrollView = [[UIScrollView alloc] init];

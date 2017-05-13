@@ -499,11 +499,6 @@ static inline bool isEqualZero(float value)
     {
          self.candleWidth = (self.superScrollView.width - (self.displayCount - 1) * self.candleSpace) / self.displayCount;
     }
-    
-    else
-    {
-        self.displayCount = self.dataArray.count;
-    }
 }
 
 -(void)drawKLine
@@ -553,7 +548,7 @@ static inline bool isEqualZero(float value)
     self.bottomMargin = 0;
     self.minHeight = 3;
     self.kvoEnable = YES;
-    self.isAutoSetterWidth = YES;
+   // self.isAutoSetterWidth = NO;
     self.timeLayerHeight = 15;
 }
 
