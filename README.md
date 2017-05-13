@@ -5,7 +5,7 @@
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo1.gif)
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo3.gif)
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo4.gif)
-- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo4.gif)
+- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo5.gif)
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/img1.png)
 ## 特点:
 - 采用 CAShapeLayer + UIBezierPath绘制，绘制效率高，占用内存低
