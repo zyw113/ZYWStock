@@ -5,11 +5,18 @@
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo1.gif)
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo3.gif)
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo4.gif)
+- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo5.gif)
 - ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/img1.png)
 ## 特点:
 - 采用 CAShapeLayer + UIBezierPath绘制，绘制效率高，占用内存低
 - 底层视图是UIScrollView，ScrollView上面添加一个View，所有的绘制在这个View上完成。体验流畅丝滑，FPS平均在55帧以上
 - 指标支持MACD、WR、KDJ。指标计算采用TALib，方便扩展
+## 版本记录
+### V0.1
+- 新增横竖屏切换
+### V0.2
+- 新增分时图
+
 ## 基础代理方法
 ```
 -(void)displayScreenleftPostion:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count;
@@ -19,6 +26,6 @@
 ```
 ## Contact
 - 如果使用中发现问题欢迎添加 issue ，也欢迎 Pull request。
-- QQ群:640138789 (欢迎大家积极加群)
+- QQ群:640138789
 ## License
 - Released under Apache Licence 2.0.
