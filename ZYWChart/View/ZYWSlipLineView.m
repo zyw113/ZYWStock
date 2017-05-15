@@ -108,7 +108,6 @@
     _textLabel.hidden = YES;
     
     self.xLayer = [CAShapeLayer layer];
-    self.xLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
     self.xLayer.lineWidth = 1;
     self.xLayer.lineCap = kCALineCapRound;
     self.xLayer.lineJoin = kCALineJoinRound;

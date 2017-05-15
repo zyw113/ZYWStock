@@ -254,7 +254,6 @@ static inline bool isEqualZero(float value)
     if (!self.lineChartLayer)
     {
         self.lineChartLayer = [CAShapeLayer layer];
-        self.lineChartLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
         self.lineChartLayer.strokeColor = [UIColor clearColor].CGColor;
         self.lineChartLayer.fillColor = [UIColor clearColor].CGColor;
     }
@@ -269,7 +268,6 @@ static inline bool isEqualZero(float value)
     if (!self.timeLayer)
     {
         self.timeLayer = [CAShapeLayer layer];
-        self.timeLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
         self.timeLayer.contentsScale = [UIScreen mainScreen].scale;
         self.timeLayer.strokeColor = [UIColor clearColor].CGColor;
         self.timeLayer.fillColor = [UIColor clearColor].CGColor;
@@ -285,7 +283,6 @@ static inline bool isEqualZero(float value)
     if (!self.ma5LineLayer)
     {
         self.ma5LineLayer = [CAShapeLayer layer];
-        self.ma5LineLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
         self.ma5LineLayer.lineWidth = self.lineWidth;
         self.ma5LineLayer.lineCap = kCALineCapRound;
         self.ma5LineLayer.lineJoin = kCALineJoinRound;
@@ -301,7 +298,6 @@ static inline bool isEqualZero(float value)
     if (!self.ma10LineLayer)
     {
         self.ma10LineLayer = [CAShapeLayer layer];
-        self.ma10LineLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
         self.ma10LineLayer.lineWidth = self.lineWidth;
         self.ma10LineLayer.lineCap = kCALineCapRound;
         self.ma10LineLayer.lineJoin = kCALineJoinRound;
@@ -317,7 +313,6 @@ static inline bool isEqualZero(float value)
     if (!self.ma25LineLayer)
     {
         self.ma25LineLayer = [CAShapeLayer layer];
-        self.ma25LineLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
         self.ma25LineLayer.lineWidth = self.lineWidth;
         self.ma25LineLayer.lineCap = kCALineCapRound;
         self.ma25LineLayer.lineJoin = kCALineJoinRound;
@@ -423,7 +418,6 @@ static inline bool isEqualZero(float value)
             
             //时间线
             CAShapeLayer *lineLayer = [self getAxispLayer];
-            lineLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), self.lineWidth);
             UIBezierPath *path = [UIBezierPath bezierPath];
             path.lineWidth = self.lineWidth;
             lineLayer.lineWidth = self.lineWidth;
@@ -440,7 +434,6 @@ static inline bool isEqualZero(float value)
 {
     CGFloat klineWidth = (self.dataArray.count)*self.candleWidth+self.candleSpace*(self.dataArray.count);
     CAShapeLayer *bottomLayer = [self getAxispLayer];
-    bottomLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame),  CGRectGetHeight(self.frame));
     bottomLayer.lineWidth = self.lineWidth;
     UIBezierPath *bpath = [UIBezierPath bezierPath];
     [bpath moveToPoint:CGPointMake(0, self.height - self.timeLayerHeight - self.bottomMargin)];
@@ -449,7 +442,6 @@ static inline bool isEqualZero(float value)
     [self.timeLayer addSublayer:bottomLayer];
     
     CAShapeLayer *centXLayer = [self getAxispLayer];
-    centXLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame),  CGRectGetHeight(self.frame));
     UIBezierPath *xPath = [UIBezierPath bezierPath];
     [xPath moveToPoint:CGPointMake(0,self.centerY)];
     [xPath addLineToPoint:CGPointMake(klineWidth,self.centerY)];

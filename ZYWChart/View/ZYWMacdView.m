@@ -238,7 +238,6 @@ static inline bool isEqualZero(float value)
     {
         _macdLayer = [CAShapeLayer layer];
         _macdLayer.lineWidth = _lineWidth;
-        _macdLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
         _macdLayer.strokeColor = [UIColor clearColor].CGColor;
         _macdLayer.fillColor = [UIColor clearColor].CGColor;
     }
