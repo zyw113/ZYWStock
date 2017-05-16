@@ -334,7 +334,6 @@ static inline bool isEqualZero(float value)
     UIBezierPath *path = [UIBezierPath drawKLine:openPrice close:closePrice high:hightPrice low:lowPrice candleWidth:self.candleWidth rect:rect xPostion:x lineWidth:self.lineWidth];
     
     CAShapeLayer *subLayer = [CAShapeLayer layer];
-    subLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
     if (postion.openPoint.y >= postion.closePoint.y)
     {
         subLayer.strokeColor = RoseColor.CGColor;

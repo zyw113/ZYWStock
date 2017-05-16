@@ -158,7 +158,7 @@ typedef enum
     _bottomView = [UIView new];
     [_scrollView addSubview:_bottomView];
     [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_technicalView.mas_bottom).offset(2*heightradio);
+        make.top.equalTo(_technicalView.mas_bottom).offset(1*widthradio);
         make.left.right.equalTo(_candleChartView);
         make.height.equalTo(@((DEVICE_HEIGHT- 64 - 100)*BottomViewScale));
     }];
