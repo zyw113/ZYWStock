@@ -15,7 +15,8 @@
 - 新增横竖屏切换
 ### V0.2
 - 新增分时图
-
+### V0.3
+- 优化代码
 ## 基础代理方法
 ```
 -(void)displayScreenleftPostion:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count;
