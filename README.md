@@ -6,11 +6,11 @@
 - ZYWStock是iOS下K线图的绘制库。支持放大缩小，长按高亮, 横竖屏切换。流畅丝滑~~~
 - 如果刚好帮到了你，欢迎star fork 😄 O(∩_∩)O~~ 😄
 ## 
-- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo6.gif);
-- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo3.gif);
-- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo4.gif);
-- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo5.gif);
-- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/img1.png);
+- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo6.gif)
+- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo3.gif)
+- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo4.gif)
+- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/demo5.gif)
+- ![](https://github.com/zyw113/ZYWStock/blob/master/resourse/img1.png)
 ## 特点:
 - 采用 CAShapeLayer + UIBezierPath绘制，绘制效率高，占用内存低
 - 底层视图是UIScrollView，ScrollView上面添加一个View，所有的绘制在这个View上完成。体验流畅丝滑，FPS平均在55帧以上
@@ -52,6 +52,78 @@
  加载更多数据
  */
 - (void)displayMoreData;
+```
+### 基础属性方法
+```
+/**
+ 数据源数组 在调用绘制方法之前设置 。Demo中数据源个数是固定的，如需实现类似右拉加载更多效果(参考网易贵金属)，需要在每次添加数据的时候设置 然后调用绘制方法 (现在本地数据是重复的6组)
+ */
+@property (nonatomic,strong) NSMutableArray<__kindof ZYWCandleModel*> *dataArray;
+
+/**
+ 当前屏幕范围内显示的k线模型数组
+ */
+@property (nonatomic,strong) NSMutableArray *currentDisplayArray;
+
+/**
+ 当前屏幕范围内显示的k线位置数组
+ */
+@property (nonatomic,strong) NSMutableArray *currentPostionArray;
+
+/**
+ 可视区域显示多少根k线 (如果数据源数组不足以占满屏幕，需要手动给定宽度)
+ */
+@property (nonatomic,assign) NSInteger displayCount;
+
+/**
+ k线之间的距离
+ */
+@property (nonatomic,assign) CGFloat candleSpace;
+
+/**
+ k线的宽度 根据每页k线的根数和k线之间的距离动态计算得出
+ */
+@property (nonatomic,assign) CGFloat candleWidth;
+
+/**
+ k线最小高度
+ */
+@property (nonatomic,assign) CGFloat minHeight;
+
+/**
+ 当前屏幕范围内绘制起点位置
+ */
+@property (nonatomic,assign) CGFloat leftPostion;
+
+/**
+ 当前绘制的起始下标
+ */
+@property (nonatomic,assign) NSInteger currentStartIndex;
+
+/**
+ 滑到最右侧的偏移量
+ */
+@property (nonatomic,assign) CGFloat previousOffsetX;
+
+/**
+ 当前偏移量
+ */
+@property (nonatomic,assign) CGFloat contentOffset;
+
+@property (nonatomic,assign) BOOL kvoEnable;
+
+/**
+ 长按手势返回对应model的相对位置
+
+ @param xPostion 手指在屏幕的位置
+ @return 距离手指位置最近的model位置
+ */
+- (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
+
+- (void)stockFill;
+- (void)calcuteCandleWidth;
+- (void)updateWidth;
+- (void)drawKLine;
 ```
 ## Contact
 - 如果使用中发现问题欢迎添加 issue ，也欢迎 Pull request。
