@@ -1,4 +1,5 @@
 # ZYWStock
+[![Crates.io](https://img.shields.io/crates/l/rustc-serialize.svg)]()
 - ZYWStock是iOS下K线图的绘制库。支持放大缩小，长按高亮, 横竖屏切换。流畅丝滑~~~
 - 如果刚好帮到了你，欢迎star fork 😄 O(∩_∩)O~~ 😄
 ## 
