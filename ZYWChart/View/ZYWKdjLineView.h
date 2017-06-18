@@ -17,6 +17,6 @@
 @property (nonatomic, assign) NSInteger startIndex;
 @property (nonatomic, assign) NSInteger displayCount;
 
--(void)stockFill;
+- (void)stockFill;
 
 @end

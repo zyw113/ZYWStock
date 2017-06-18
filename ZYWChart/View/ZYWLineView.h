@@ -14,6 +14,6 @@
 @property (nonatomic,strong) UIColor *fillColor;
 @property (nonatomic,assign) BOOL isFillColor;
 
--(void)stockFill;
+- (void)stockFill;
 
 @end

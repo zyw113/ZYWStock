@@ -43,11 +43,6 @@
 @property (nonatomic,assign) CGFloat candleWidth;
 
 /**
- 是否自动设置k线的宽度 在数据量不足以占满屏幕时，需要手动设置宽度，避免只设置displayCount 导致计算出来的宽度太大的问题
- */
-@property (nonatomic,assign) BOOL isAutoSetterWidth;
-
-/**
  k线最小高度
  */
 @property (nonatomic,assign) CGFloat minHeight;
@@ -80,12 +75,12 @@
  @param xPostion 手指在屏幕的位置
  @return 距离手指位置最近的model位置
  */
--(CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
+- (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
 
--(void)stockFill;
--(void)calcuteCandleWidth;
--(void)updateWidth;
--(void)drawKLine;
+- (void)stockFill;
+- (void)calcuteCandleWidth;
+- (void)updateWidth;
+- (void)drawKLine;
 
 @property (nonatomic,weak) id <ZYWCandleProtocol> delegate;
 

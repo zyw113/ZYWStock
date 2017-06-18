@@ -19,6 +19,6 @@
 @property (nonatomic,assign) CGFloat    candleWidth;
 @property (nonatomic,assign) CGFloat    candleSpace;
 
--(void)stockFill;
+- (void)stockFill;
 
 @end

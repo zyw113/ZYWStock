@@ -25,7 +25,7 @@
 
 #pragma mark Layer 相关
 
--(void)initLayer
+- (void)initLayer
 {
     if (self.kLineLayer)
     {
@@ -77,7 +77,7 @@
     [self.layer addSublayer:self.jLineLayer];
 }
 
--(void)initMaxAndMinValue
+- (void)initMaxAndMinValue
 {
     [self layoutIfNeeded];
     self.maxY = CGFLOAT_MIN;
@@ -105,7 +105,7 @@
     self.scaleY = (self.height - self.topMargin - self.bottomMargin)/(self.maxY-self.minY);
 }
 
--(void)initLinesModelPosition
+- (void)initLinesModelPosition
 {
     [self.kPostionArray removeAllObjects];
     [self.dPostionArray removeAllObjects];
@@ -138,7 +138,7 @@
     }
 }
 
--(void)drawLineLayer
+- (void)drawLineLayer
 {
     ZYWLineData *kData = self.dataArray[0];
     UIBezierPath *kPath = [UIBezierPath drawLine:self.kPostionArray];
@@ -164,7 +164,7 @@
 
 #pragma mark 绘制
 
--(void)stockFill
+- (void)stockFill
 {
     [self initMaxAndMinValue];
     [self initLayer];
@@ -174,7 +174,7 @@
 
 #pragma mark lazyMethod
 
--(NSMutableArray*)kPostionArray
+- (NSMutableArray*)kPostionArray
 {
     if (!_kPostionArray)
     {
@@ -183,7 +183,7 @@
     return _kPostionArray;
 }
 
--(NSMutableArray*)dPostionArray
+- (NSMutableArray*)dPostionArray
 {
     if (!_dPostionArray)
     {
@@ -192,7 +192,7 @@
     return _dPostionArray;
 }
 
--(NSMutableArray*)jPostionArray
+- (NSMutableArray*)jPostionArray
 {
     if (!_jPostionArray)
     {

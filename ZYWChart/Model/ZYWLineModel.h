@@ -14,6 +14,6 @@
 @property (nonatomic,assign) CGFloat yPosition;
 @property (nonatomic,strong) UIColor *lineColor;
 
-+(instancetype)initPositon:(CGFloat)xPositon yPosition:(CGFloat)yPosition color:(UIColor*)color;
++ (instancetype)initPositon:(CGFloat)xPositon yPosition:(CGFloat)yPosition color:(UIColor*)color;
 
 @end

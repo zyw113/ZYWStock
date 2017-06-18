@@ -19,7 +19,7 @@
 
 #pragma mark setter
 
--(NSMutableArray*)modelPostionArray
+- (NSMutableArray*)modelPostionArray
 {
     if (!_modelPostionArray)
     {
@@ -30,13 +30,13 @@
 
 #pragma mark draw
 
--(void)drawRect:(CGRect)rect
+- (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
     [self draw];
 }
 
--(void)drawLineLayer
+- (void)drawLineLayer
 {
     UIBezierPath *path = [UIBezierPath drawLine:self.modelPostionArray];
     self.lineChartLayer = [CAShapeLayer layer];
@@ -64,7 +64,7 @@
     [self startAnimation];
 }
 
--(void)startAnimation
+- (void)startAnimation
 {
     CABasicAnimation*pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     pathAnimation.duration = 2.0f;
@@ -74,7 +74,7 @@
     [self.lineChartLayer addAnimation:pathAnimation forKey:nil];
 }
 
--(void)initModelPostion
+- (void)initModelPostion
 {
     __weak typeof(self) this = self;
     [_dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -96,14 +96,14 @@
     self.scaleY = (self.height - self.topMargin - self.bottomMargin)/(self.maxY-self.minY);
 }
 
--(void)draw
+- (void)draw
 {
     [self initConfig];
     [self initModelPostion];
     [self drawLineLayer];
 }
 
--(void)stockFill
+- (void)stockFill
 {
     [self setNeedsDisplay];
 }

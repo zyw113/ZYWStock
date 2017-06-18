@@ -27,7 +27,7 @@ static inline bool isEqualZero(float value)
 
 @implementation ZYWMacdView
 
--(void)calcuteMaxAndMinValue
+- (void)calcuteMaxAndMinValue
 {
     CGFloat maxPrice = 0;
     CGFloat minPrice = 0;
@@ -54,7 +54,7 @@ static inline bool isEqualZero(float value)
     self.scaleY = (self.maxY - self.minY) / (self.height - self.topMargin - self.bottomMargin);
 }
 
--(void)initMaModelPosition
+- (void)initMaModelPosition
 {
     for (NSInteger i = 0;i < self.displayArray.count;i++)
     {
@@ -86,7 +86,7 @@ static inline bool isEqualZero(float value)
     }
 }
 
--(CAShapeLayer*)drawMacdLayer:(ZYWMacdPostionModel*)model candleModel:(ZYWMacdModel*)candleModel
+- (CAShapeLayer*)drawMacdLayer:(ZYWMacdPostionModel*)model candleModel:(ZYWMacdModel*)candleModel
 {
     CGRect rect;
     if (model.startPoint.y<=0)
@@ -115,7 +115,7 @@ static inline bool isEqualZero(float value)
     return subLayer;
 }
 
--(void)drawLine
+- (void)drawLine
 {
     __weak typeof(self) this = self;
     [_macdArray enumerateObjectsUsingBlock:^(ZYWMacdPostionModel* obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -141,7 +141,7 @@ static inline bool isEqualZero(float value)
     [self.macdLayer addSublayer:diffLayer];
 }
 
--(void)removeFromSubLayer
+- (void)removeFromSubLayer
 {
     for (NSInteger i = 0 ; i < self.macdLayer.sublayers.count; i++)
     {
@@ -153,7 +153,7 @@ static inline bool isEqualZero(float value)
     self.macdLayer = nil;
 }
 
--(void)removeAllObjectFromArray
+- (void)removeAllObjectFromArray
 {
     if (self.displayArray.count>0)
     {
@@ -164,7 +164,7 @@ static inline bool isEqualZero(float value)
     }
 }
 
--(void)initLayer
+- (void)initLayer
 {
     if (!self.macdLayer.sublayers.count)
     {
@@ -174,7 +174,7 @@ static inline bool isEqualZero(float value)
 
 #pragma mark setter,getter
 
--(void)stockFill
+- (void)stockFill
 {
     [self removeFromSubLayer];
     [self removeAllObjectFromArray];
@@ -196,7 +196,7 @@ static inline bool isEqualZero(float value)
 
 #pragma mark lazyLoad
 
--(NSMutableArray*)macdArray
+- (NSMutableArray*)macdArray
 {
     if (!_macdArray)
     {
@@ -205,7 +205,7 @@ static inline bool isEqualZero(float value)
     return _macdArray;
 }
 
--(NSMutableArray*)deaArray
+- (NSMutableArray*)deaArray
 {
     if (!_deaArray)
     {
@@ -214,7 +214,7 @@ static inline bool isEqualZero(float value)
     return _deaArray;
 }
 
--(NSMutableArray*)diffArray
+- (NSMutableArray*)diffArray
 {
     if (!_diffArray)
     {
@@ -223,7 +223,7 @@ static inline bool isEqualZero(float value)
     return _diffArray;
 }
 
--(NSMutableArray*)displayArray
+- (NSMutableArray*)displayArray
 {
     if (!_displayArray)
     {
@@ -232,7 +232,7 @@ static inline bool isEqualZero(float value)
     return _displayArray;
 }
 
--(CAShapeLayer*)macdLayer
+- (CAShapeLayer*)macdLayer
 {
     if (!_macdLayer)
     {

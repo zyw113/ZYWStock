@@ -29,7 +29,7 @@
 
 #pragma mark setter
 
--(NSMutableArray*)modelPostionArray
+- (NSMutableArray*)modelPostionArray
 {
     if (!_modelPostionArray)
     {
@@ -40,7 +40,7 @@
 
 #pragma mark draw
 
--(void)draw
+- (void)draw
 {
     [self initConfig];
     [self initModelPostion];
@@ -51,18 +51,18 @@
     [self addLabels];
 }
 
--(void)stockFill
+- (void)stockFill
 {
     [self setNeedsDisplay];
 }
 
--(void)drawRect:(CGRect)rect
+- (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
     [self draw];
 }
 
--(void)drawLineLayer
+- (void)drawLineLayer
 {
     UIBezierPath *path = [UIBezierPath drawLine:self.modelPostionArray];
     self.lineChartLayer = [CAShapeLayer layer];
@@ -86,7 +86,7 @@
     [self startRoundAnimation];
 }
 
--(void)drawBoxLayer
+- (void)drawBoxLayer
 {
     self.boxLayer = [CAShapeLayer layer];
     self.boxLayer.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
@@ -128,7 +128,7 @@
     [self.boxLayer addSublayer:bottomLayer];
 }
 
--(void)addAxisLayer
+- (void)addAxisLayer
 {
     self.xLayer = [CAShapeLayer layer];
     self.xLayer.lineWidth = 1;
@@ -187,7 +187,7 @@
     }
 }
 
--(void)addTimeLayer
+- (void)addTimeLayer
 {
     self.timeLayer = [CAShapeLayer layer];
     self.timeLayer.contentsScale = [UIScreen mainScreen].scale;
@@ -207,7 +207,7 @@
     }
 }
 
--(void)addLabels
+- (void)addLabels
 {
     _timeLabel = [self createLabel];
     [self addSubview:_timeLabel];
@@ -220,7 +220,7 @@
 
 #pragma mark Animation
 
--(void)startRoundAnimation
+- (void)startRoundAnimation
 {
     ZYWLineModel *nextPoint = [_modelPostionArray lastObject];
     UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(nextPoint.xPosition, nextPoint.yPosition) radius:5 startAngle:0 endAngle:2*M_PI clockwise:YES];
@@ -262,7 +262,7 @@
 
 #pragma mark init
 
--(void)initModelPostion
+- (void)initModelPostion
 {
     _modelPostionArray = [NSMutableArray array];
     for (NSInteger i = 0;i<_dataArray.count;i++)
@@ -275,7 +275,7 @@
     }
 }
 
--(void)initConfig
+- (void)initConfig
 {
     self.boxLineWidth = 1;
     self.timeLayerHeight = 20;
@@ -299,7 +299,7 @@
 
 #pragma mark 长按手势
 
--(void)LongPressGesture:(UILongPressGestureRecognizer*)longPress
+- (void)LongPressGesture:(UILongPressGestureRecognizer*)longPress
 {
     static CGFloat oldPositionX = 0;
     if(UIGestureRecognizerStateChanged == longPress.state || UIGestureRecognizerStateBegan == longPress.state)
@@ -349,7 +349,7 @@
 
 #pragma mark 长按获取坐标
 
--(CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion
+- (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion
 {
     for (NSInteger i = 0; i<self.modelPostionArray.count; i++) {
         ZYWLineModel *model = self.modelPostionArray[i];
@@ -379,7 +379,7 @@
     return CGPointZero;
 }
 
--(CGPoint)getLastModelPostion
+- (CGPoint)getLastModelPostion
 {
     if (_modelPostionArray.count>0)
     {
@@ -391,7 +391,7 @@
 
 #pragma mark privateMethod
 
--(UILabel*)createLabel
+- (UILabel*)createLabel
 {
     UILabel *label = [UILabel new];
     label.backgroundColor = [UIColor colorWithHexString:@"a8a8a8"];
@@ -401,7 +401,7 @@
     return label;
 }
 
--(CAShapeLayer*)getAxispLayer
+- (CAShapeLayer*)getAxispLayer
 {
     CAShapeLayer *layer = [CAShapeLayer layer];
     layer.strokeColor = [UIColor colorWithHexString:@"ededed"].CGColor;
@@ -410,7 +410,7 @@
     return layer;
 }
 
--(CATextLayer*)getTextLayer
+- (CATextLayer*)getTextLayer
 {
     CATextLayer *layer = [CATextLayer layer];
     layer.contentsScale = [UIScreen mainScreen].scale;

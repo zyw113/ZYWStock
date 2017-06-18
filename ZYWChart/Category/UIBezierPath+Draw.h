@@ -16,7 +16,7 @@
  @param linesArray 单个折线数组
  @return 绘制的path
  */
-+(UIBezierPath*)drawLine:(NSMutableArray*)linesArray;
++ (UIBezierPath*)drawLine:(NSMutableArray*)linesArray;
 
 /**
  绘制多个折线
@@ -24,7 +24,7 @@
  @param linesArray 多个折线数组
  @return 绘制的path数组
  */
-+(NSMutableArray<__kindof UIBezierPath*>*)drawLines:(NSMutableArray<NSMutableArray*>*)linesArray;
++ (NSMutableArray<__kindof UIBezierPath*>*)drawLines:(NSMutableArray<NSMutableArray*>*)linesArray;
 
 /**
  绘制蜡烛图
@@ -39,6 +39,6 @@
  @param lineWidth 直线宽度
  @return 绘制的path
  */
-+(UIBezierPath*)drawKLine:(CGFloat)open close:(CGFloat)close high:(CGFloat)high low:(CGFloat)low candleWidth:(CGFloat)candleWidth rect:(CGRect)rect xPostion:(CGFloat)xPostion lineWidth:(CGFloat)lineWidth;
++ (UIBezierPath*)drawKLine:(CGFloat)open close:(CGFloat)close high:(CGFloat)high low:(CGFloat)low candleWidth:(CGFloat)candleWidth rect:(CGRect)rect xPostion:(CGFloat)xPostion lineWidth:(CGFloat)lineWidth;
 
 @end

@@ -19,7 +19,7 @@
 
 @implementation ZYWWrLineView
 
--(void)initLayer
+- (void)initLayer
 {
     if (self.wrLineLayer)
     {
@@ -38,7 +38,7 @@
     [self.layer addSublayer:self.wrLineLayer];
 }
 
--(void)initMaxAndMinValue
+- (void)initMaxAndMinValue
 {
     [self layoutIfNeeded];
     self.maxY = CGFLOAT_MIN;
@@ -64,7 +64,7 @@
     self.scaleY = (self.height - self.topMargin - self.bottomMargin)/(self.maxY-self.minY);
 }
 
--(void)initLinesModelPosition
+- (void)initLinesModelPosition
 {
     [self.wrPostionArray removeAllObjects];
     ZYWLineData *lineData = _dataArray.firstObject;
@@ -79,7 +79,7 @@
     }
 }
 
--(void)drawLineLayer
+- (void)drawLineLayer
 {
     ZYWLineData *wrData = self.dataArray[0];
     UIBezierPath *wrPath = [UIBezierPath drawLine:self.wrPostionArray];
@@ -91,7 +91,7 @@
 
 #pragma mark 绘制
 
--(void)stockFill
+- (void)stockFill
 {
     [self initMaxAndMinValue];
     [self initLayer];
@@ -99,7 +99,7 @@
     [self drawLineLayer];
 }
 
--(NSMutableArray*)wrPostionArray
+- (NSMutableArray*)wrPostionArray
 {
     if (!_wrPostionArray)
     {

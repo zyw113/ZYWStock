@@ -18,7 +18,7 @@
 
 @implementation LineVC
 
--(void)viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
    

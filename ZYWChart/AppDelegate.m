@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import "FHHFPSIndicator.h"
+#import "BaseNavigationController.h"
 @interface AppDelegate ()
 
 @end
@@ -20,6 +21,7 @@
     // Override point for customization after application launch.
 
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
 #if defined(DEBUG) || defined(_DEBUG)
@@ -29,7 +31,7 @@
 #endif
     
     ViewController *Controller = [[ViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Controller];
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:Controller];
     self.window.rootViewController = nav;
     
     return YES;

@@ -19,27 +19,27 @@
  @param index 下标
  @param count 个数
  */
--(void)displayScreenleftPostion:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count;
+- (void)displayScreenleftPostion:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count;
 
 /**
- 长按手势返回当前k线下标以及模型
+ 长按手势获得当前k线下标以及模型
  
- @param kLineModeIndex 当前长按k线在可试范围数组的位置下标
+ @param kLineModeIndex 当前k线在可视范围数组的位置下标
  @param kLineModel   k线模型
  */
--(void)kLineMainViewLongPressKLinePositionModel:(NSInteger)kLineModeIndex kLineModel:(ZYWCandleModel *)kLineModel;
+- (void)longPressCandleViewWithIndex:(NSInteger)kLineModeIndex kLineModel:(ZYWCandleModel *)kLineModel;
 
 /**
  返回当前屏幕最后一根k线模型
  
  @param kLineModel k线模型
  */
--(void)displayLastModel:(ZYWCandleModel *)kLineModel;
+- (void)displayLastModel:(ZYWCandleModel *)kLineModel;
 
 /**
  加载更多数据
  */
--(void)displayMoreData;
+- (void)displayMoreData;
 
 @end
 

@@ -34,7 +34,7 @@ typedef enum
 #define MinCount 10
 #define MaxCount 30
 
-@interface CandleLineVC ()<NSXMLParserDelegate,ZYWCandleProtocol,ZYWTecnnicalViewDelegate>
+@interface CandleLineVC ()<NSXMLParserDelegate,ZYWCandleProtocol,ZYWTecnnicalViewDelegate,CandleCrossScreenVCDeleate>
 
 @property (nonatomic,strong) ZYWQuotaView *quotaView;
 @property (nonatomic,strong) UIScrollView *scrollView;
@@ -56,6 +56,7 @@ typedef enum
 @property (nonatomic,strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic,strong) UIView *verticalView;
 @property (nonatomic,strong) UIView *leavView;
+@property (nonatomic,strong) CandleCrossScreenVC *screenVC;
 
 @end
 
@@ -77,7 +78,7 @@ typedef enum
 
 #pragma mark 添加视图
 
--(void)addQuotaView
+- (void)addQuotaView
 {
     _quotaView = [ZYWQuotaView new];
     _quotaView.backgroundColor = RoseColor;
@@ -89,7 +90,7 @@ typedef enum
     }];
 }
 
--(void)addScrollView
+- (void)addScrollView
 {
     _scrollView = [UIScrollView new];
     [self.view addSubview:_scrollView];
@@ -103,7 +104,7 @@ typedef enum
     }];
 }
 
--(void)addCandleChartView
+- (void)addCandleChartView
 {
     _candleChartView = [ZYWCandleChartView new];
     [_scrollView addSubview:_candleChartView];
@@ -115,13 +116,13 @@ typedef enum
         make.height.equalTo(@((DEVICE_HEIGHT - 64 - 100)*CandleChartScale));
         make.top.equalTo(_scrollView);
     }];
-    _candleChartView.isAutoSetterWidth = YES;
+  
     _candleChartView.candleSpace = 2;
     _candleChartView.displayCount = 25;
     _candleChartView.lineWidth = 1*widthradio;
 }
 
--(void)addTopBoxView
+- (void)addTopBoxView
 {
     _topBoxView = [UIView new];
     [self.view addSubview:_topBoxView];
@@ -136,7 +137,7 @@ typedef enum
     }];
 }
 
--(void)addTechnicalView
+- (void)addTechnicalView
 {
     _technicalView = [ZYWTecnnicalView new];
     [self.view addSubview:_technicalView];
@@ -153,7 +154,7 @@ typedef enum
     [_technicalView.kdjButton setTitle:@"KDJ" forState:UIControlStateNormal];
 }
 
--(void)addBottomView
+- (void)addBottomView
 {
     _bottomView = [UIView new];
     [_scrollView addSubview:_bottomView];
@@ -165,7 +166,7 @@ typedef enum
     [_bottomView layoutIfNeeded];
 }
 
--(void)addBottomBoxView
+- (void)addBottomBoxView
 {
     _bottomBoxView = [UIView new];
     [self.view addSubview:_bottomBoxView];
@@ -180,7 +181,7 @@ typedef enum
     }];
 }
 
--(void)addPriceView
+- (void)addPriceView
 {
     _topPriceView = [ZYWPriceView new];
     [self.view addSubview:_topPriceView];
@@ -201,7 +202,7 @@ typedef enum
     }];
 }
 
--(void)addSubViews
+- (void)addSubViews
 {
     [self addQuotaView];
     [self addScrollView];
@@ -215,7 +216,7 @@ typedef enum
 
 #pragma mark 添加手势
 
--(void)addGestureToCandleView
+- (void)addGestureToCandleView
 {
     _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGesture:)];
     [self.candleChartView addGestureRecognizer:_longPressGesture];
@@ -230,7 +231,7 @@ typedef enum
 
 #pragma mark 指标视图
 
--(void)addBottomViews
+- (void)addBottomViews
 {
     _macdView = [ZYWMacdView new];
     [_bottomView addSubview:_macdView];
@@ -261,7 +262,7 @@ typedef enum
 
 #pragma mark 十字线
 
--(void)initCrossLine
+- (void)initCrossLine
 {
     self.verticalView = [UIView new];
     self.verticalView.clipsToBounds = YES;
@@ -291,7 +292,7 @@ typedef enum
 
 #pragma mark 指标切换代理
 
--(void)didSelectButton:(UIButton *)button index:(NSInteger)index
+- (void)didSelectButton:(UIButton *)button index:(NSInteger)index
 {
     if (index == 1)
     {
@@ -313,7 +314,7 @@ typedef enum
 
 #pragma mark 长按手势
 
--(void)longGesture:(UILongPressGestureRecognizer*)longPress
+- (void)longGesture:(UILongPressGestureRecognizer*)longPress
 {
     static CGFloat oldPositionX = 0;
     if(UIGestureRecognizerStateChanged == longPress.state || UIGestureRecognizerStateBegan == longPress.state)
@@ -362,7 +363,7 @@ typedef enum
 
 #pragma mark 缩放手势
 
--(void)pinchGesture:(UIPinchGestureRecognizer*)pinchPress
+- (void)pinchGesture:(UIPinchGestureRecognizer*)pinchPress
 {
     if (pinchPress.numberOfTouches < 2)
     {
@@ -429,12 +430,30 @@ typedef enum
     }
 }
 
--(void)tapGesture:(UITapGestureRecognizer*)tapGesture
+#pragma mark 横屏手势
+
+- (void)tapGesture:(UITapGestureRecognizer*)tapGesture
 {
-    CandleCrossScreenVC *vc = [CandleCrossScreenVC new];
-    [self presentViewController:vc animated:YES completion:^{
-        
-    }];
+    _screenVC = [CandleCrossScreenVC new];
+    _screenVC.orientation = UIInterfaceOrientationLandscapeRight;
+    _screenVC.delegate = self;
+    [self presentViewController:_screenVC animated:NO completion:nil];
+}
+
+#pragma mark CandleCrossScreenVCDeleate
+
+- (void)willChangeScreenMode:(CandleCrossScreenVC *)vc
+{
+    if (self.screenVC) {
+        CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+        basicAnimation.fromValue = @(M_PI_4);
+        basicAnimation.toValue = @(0);
+        basicAnimation.removedOnCompletion = NO;
+        basicAnimation.fillMode = kCAFillModeForwards;
+        [self.view.layer addAnimation:basicAnimation forKey:nil];
+        [self dismissViewControllerAnimated:NO completion:nil];
+        self.screenVC = nil;
+    }
 }
 
 #pragma mark 数据读取
@@ -488,11 +507,11 @@ typedef enum
     [self reloadData:newMarray];
 }
 
--(void)reloadData:(NSMutableArray*)array
+- (void)reloadData:(NSMutableArray*)array
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         _macdView.dataArray = computeMACDData(array).mutableCopy;
-        _kdjLineView.dataArray = computeKDJData(array).mutableCopy;
+       _kdjLineView.dataArray = computeKDJData(array).mutableCopy;
         _wrLineView.dataArray = computeWRData(array,10).mutableCopy;
         NSInteger count = self.candleChartView.displayCount;
         NSInteger index = count / 3;
@@ -516,22 +535,22 @@ typedef enum
 
 #pragma mark candleLineDelegeta
 
--(void)displayLastModel:(ZYWCandleModel *)kLineModel
+- (void)displayLastModel:(ZYWCandleModel *)kLineModel
 {
     _quotaView.model = kLineModel;
 }
 
--(void)kLineMainViewLongPressKLinePositionModel:(NSInteger)kLineModeIndex kLineModel:(ZYWCandleModel *)kLineModel
+- (void)longPressCandleViewWithIndex:(NSInteger)kLineModeIndex kLineModel:(ZYWCandleModel *)kLineModel
 {
      _quotaView.model = kLineModel;
 }
 
--(void)displayScreenleftPostion:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count
+- (void)displayScreenleftPostion:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count
 {
     [self showIndexLineView:leftPostion startIndex:index count:count];
 }
 
--(void)showIndexLineView:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count
+- (void)showIndexLineView:(CGFloat)leftPostion startIndex:(NSInteger)index count:(NSInteger)count
 {
     _topPriceView.maxPriceLabel.text = [NSString stringWithFormat:@"%.2f",self.candleChartView.maxY];
     _topPriceView.middlePriceLabel.text = [NSString stringWithFormat:@"%.2f",(self.candleChartView.maxY - self.candleChartView.minY)/2 + self.candleChartView.minY];
@@ -589,7 +608,7 @@ typedef enum
     }
 }
 
--(void)displayMoreData
+- (void)displayMoreData
 {
     NSLog(@"没有更多数据了");
  /*---实现右滑加载加载更多注意点--*/
@@ -602,16 +621,17 @@ typedef enum
 
 #pragma mark 屏幕相关
 
--(UIInterfaceOrientationMask)supportedInterfaceOrientations{
-    return UIInterfaceOrientationMaskLandscape;
-}
-
 - (BOOL)shouldAutorotate
 {
-    return NO;
+    return YES;
 }
 
--(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
     return UIInterfaceOrientationPortrait;
 }

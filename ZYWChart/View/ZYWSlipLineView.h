@@ -12,7 +12,7 @@
 
 @property (nonatomic,strong) NSArray *dataArray;
 
--(CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
--(void)stockFill;
+- (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
+- (void)stockFill;
 
 @end

@@ -13,6 +13,6 @@
 @property (nonatomic,assign) CGPoint startPoint;
 @property (nonatomic,assign) CGPoint endPoint;
 
-+(instancetype)initPostion:(CGPoint)startPoint endPoint:(CGPoint)endPoint;
++ (instancetype)initPostion:(CGPoint)startPoint endPoint:(CGPoint)endPoint;
 
 @end

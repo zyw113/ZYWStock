@@ -16,7 +16,7 @@
 
 @implementation ZYWTecnnicalView
 
--(UIButton*)macdButton
+- (UIButton*)macdButton
 {
     if (!_macdButton)
     {
@@ -33,7 +33,7 @@
     return _macdButton;
 }
 
--(UIButton*)wrButton
+- (UIButton*)wrButton
 {
     if (!_wrButton)
     {
@@ -47,7 +47,7 @@
     return _wrButton;
 }
 
--(UIButton*)kdjButton
+- (UIButton*)kdjButton
 {
     if (!_kdjButton)
     {
@@ -63,7 +63,7 @@
 
 #pragma mark private
 
--(UIButton*)createButtonWithTag:(NSInteger)tag
+- (UIButton*)createButtonWithTag:(NSInteger)tag
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.tag = tag;
@@ -75,7 +75,7 @@
     return button;
 }
 
--(void)didClick:(UIButton*)button
+- (void)didClick:(UIButton*)button
 {
     if (_currentButtonTag == button.tag)
     {

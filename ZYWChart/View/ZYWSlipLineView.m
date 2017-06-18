@@ -36,7 +36,7 @@
 
 #pragma mark draw
 
--(void)drawLineLayer
+- (void)drawLineLayer
 {
     UIBezierPath *path = [UIBezierPath drawLine:self.modelPostionArray];
     self.lineChartLayer = [CAShapeLayer layer];
@@ -53,7 +53,7 @@
 
 #pragma mark animation
 
--(void)startAnimation
+- (void)startAnimation
 {
     CABasicAnimation*pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     pathAnimation.duration = 2.0f;
@@ -65,7 +65,7 @@
 
 #pragma mark postion
 
--(void)getModelPostion
+- (void)getModelPostion
 {
     __weak typeof(self) this = self;
     [_dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -79,7 +79,7 @@
 
 #pragma mark baseMethod
 
--(void)initConfig
+- (void)initConfig
 {
     self.lineSpace = DEVICE_WIDTH/10.f ;
     CGFloat  contentWidth = self.lineSpace*(_dataArray.count - 1) + self.leftMargin + self.rightMargin;
@@ -98,13 +98,16 @@
     [self addGestureRecognizer:self.longPress];
 }
 
--(void)addTextLabelAndLayer
+- (void)addTextLabelAndLayer
 {
     _textLabel = [UILabel new];
     [self.superScrollView addSubview:_textLabel];
     _textLabel.textColor = [UIColor whiteColor];
     _textLabel.backgroundColor = [UIColor colorWithHexString:@"a8a8a8"];
-    _textLabel.bounds = CGRectMake(0, 0, 70, 20);
+    _textLabel.font = [UIFont systemFontOfSize:14];
+    _textLabel.textAlignment = NSTextAlignmentCenter;
+    _textLabel.bounds = CGRectMake(0, 0, 100, 20);
+    _textLabel.layer.masksToBounds = YES;
     _textLabel.hidden = YES;
     
     self.xLayer = [CAShapeLayer layer];
@@ -116,7 +119,7 @@
     [self.layer addSublayer:self.xLayer];
 }
 
--(void)stockFill
+- (void)stockFill
 {
     [self initConfig];
     [self getModelPostion];
@@ -124,7 +127,7 @@
     [self addTextLabelAndLayer];
 }
 
--(void)didMoveToSuperview
+- (void)didMoveToSuperview
 {
     [super didMoveToSuperview];
     self.superScrollView = (UIScrollView*)self.superview;
@@ -132,7 +135,7 @@
 
 #pragma mark 长按手势
 
--(void)LongPressGesture:(UILongPressGestureRecognizer*)longPress
+- (void)LongPressGesture:(UILongPressGestureRecognizer*)longPress
 {
     static CGFloat oldPositionX = 0;
     if(UIGestureRecognizerStateChanged == longPress.state || UIGestureRecognizerStateBegan == longPress.state)
@@ -173,7 +176,7 @@
 
 #pragma mark 长按获取坐标
 
--(CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion
+- (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion
 {
     for (NSInteger i = 1; i<self.modelPostionArray.count; i++) {
         ZYWLineModel *model = self.modelPostionArray[i];
@@ -182,12 +185,15 @@
         
         if (xPostion - self.leftMargin >= minX && xPostion - self.leftMargin  < maxX)
         {
-            if (xPostion >= self.width - self.rightMargin)
+            ZYWLineModel *lastModel = self.modelPostionArray.lastObject;
+            //最后一个
+            if (xPostion >= self.width - self.rightMargin && xPostion >lastModel.xPosition)
             {
                 _curentModelIndex = _modelPostionArray.count  - 1;
                 break;
             }
             
+            //第一个
             else if (xPostion <= self.lineSpace)
             {
                 _curentModelIndex = 0;

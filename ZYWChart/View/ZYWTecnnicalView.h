@@ -10,7 +10,7 @@
 
 @protocol ZYWTecnnicalViewDelegate <NSObject>
 
--(void)didSelectButton:(UIButton*)button index:(NSInteger)index;
+- (void)didSelectButton:(UIButton*)button index:(NSInteger)index;
 
 @end
 

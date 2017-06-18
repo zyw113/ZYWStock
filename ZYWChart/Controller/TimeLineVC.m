@@ -54,7 +54,6 @@
     _timeLineView.timesCount = 243;
     _timeLineView.dataArray = timeArray.mutableCopy;
     [_timeLineView stockFill];
-
 }
 
 - (void)didReceiveMemoryWarning {

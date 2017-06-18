@@ -192,6 +192,7 @@
 		423B9A2B1EC15EE300A2B49A /* CandleCrossScreenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B9A2A1EC15EE300A2B49A /* CandleCrossScreenVC.m */; };
 		423B9A301EC18BD800A2B49A /* ZYWCrossPriceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 423B9A2F1EC18BD800A2B49A /* ZYWCrossPriceView.m */; };
 		4242362A1EC1ED8400C161A8 /* N225.xml in Resources */ = {isa = PBXBuildFile; fileRef = 424236291EC1ED8300C161A8 /* N225.xml */; };
+		424347161EF69C570021F2C5 /* BaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 424347151EF69C570021F2C5 /* BaseNavigationController.m */; };
 		4248A0441EBC485A0086EAA7 /* ZYWBaseChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4248A0341EBC485A0086EAA7 /* ZYWBaseChartView.m */; };
 		4248A0451EBC485A0086EAA7 /* ZYWCandleChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4248A0361EBC485A0086EAA7 /* ZYWCandleChartView.m */; };
 		4248A0461EBC485A0086EAA7 /* ZYWKdjLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4248A0391EBC485A0086EAA7 /* ZYWKdjLineView.m */; };
@@ -448,6 +449,8 @@
 		423B9A2E1EC18BD800A2B49A /* ZYWCrossPriceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWCrossPriceView.h; sourceTree = "<group>"; };
 		423B9A2F1EC18BD800A2B49A /* ZYWCrossPriceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWCrossPriceView.m; sourceTree = "<group>"; };
 		424236291EC1ED8300C161A8 /* N225.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = N225.xml; sourceTree = "<group>"; };
+		424347141EF69C570021F2C5 /* BaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseNavigationController.h; path = ../BaseNavigationController.h; sourceTree = "<group>"; };
+		424347151EF69C570021F2C5 /* BaseNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseNavigationController.m; path = ../BaseNavigationController.m; sourceTree = "<group>"; };
 		4248A0331EBC485A0086EAA7 /* ZYWBaseChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWBaseChartView.h; sourceTree = "<group>"; };
 		4248A0341EBC485A0086EAA7 /* ZYWBaseChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZYWBaseChartView.m; sourceTree = "<group>"; };
 		4248A0351EBC485A0086EAA7 /* ZYWCandleChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZYWCandleChartView.h; sourceTree = "<group>"; };
@@ -629,6 +632,8 @@
 				4248A04D1EBC80E20086EAA7 /* TimeLineVC.m */,
 				423B9A291EC15EE300A2B49A /* CandleCrossScreenVC.h */,
 				423B9A2A1EC15EE300A2B49A /* CandleCrossScreenVC.m */,
+				424347141EF69C570021F2C5 /* BaseNavigationController.h */,
+				424347151EF69C570021F2C5 /* BaseNavigationController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1245,6 +1250,7 @@
 				423942D11E2B6D0300F2A873 /* ta_CDLUNIQUE3RIVER.c in Sources */,
 				423942CB1E2B6D0300F2A873 /* ta_CDLSTALLEDPATTERN.c in Sources */,
 				423942E91E2B6D0300F2A873 /* ta_LINEARREG_SLOPE.c in Sources */,
+				424347161EF69C570021F2C5 /* BaseNavigationController.m in Sources */,
 				423943011E2B6D0300F2A873 /* ta_NVI.c in Sources */,
 				423942BC1E2B6D0300F2A873 /* ta_CDLLONGLEGGEDDOJI.c in Sources */,
 				4248A0491EBC485A0086EAA7 /* ZYWSlipLineView.m in Sources */,
@@ -1473,6 +1479,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/ZYWChart/ZYWChart-Prefix.pch";
 				INFOPLIST_FILE = ZYWChart/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = zyw113.ZYWChart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1489,6 +1496,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/ZYWChart/ZYWChart-Prefix.pch";
 				INFOPLIST_FILE = ZYWChart/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = zyw113.ZYWChart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
