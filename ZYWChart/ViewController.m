@@ -11,13 +11,13 @@
 @interface ViewController () <UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic,strong) UITableView *tableView;
-@property (nonatomic,strong) NSArray *dataSourceArray;
+@property (nonatomic,copy)    NSArray *titlesArray;
 
 @end
 
 @implementation ViewController
 
--(void)viewDidLoad
+- (void)viewDidLoad
 {
     [super viewDidLoad];
     self.navigationItem.title = @"Demo";
@@ -25,23 +25,24 @@
     [self.view addSubview:_tableView];
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _dataSourceArray = @[@"LineVC",@"SlipLineVC",@"CandleLineVC",@"TimeLineVC"];
+    _titlesArray = @[@"折线图",@"滑动折线图",@"K线图",@"分时图"];
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _dataSourceArray.count;
+    return _titlesArray.count;
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *vcName = _dataSourceArray[indexPath.row];
+    NSArray *controllers = @[@"LineVC",@"SlipLineVC",@"CandleLineVC",@"TimeLineVC"];
+    NSString *vcName = controllers[indexPath.row];
     Class class = NSClassFromString(vcName);
     UIViewController *vc = [[class alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
--(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *identifier = @"identifier";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
@@ -51,7 +52,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    cell.textLabel.text = _dataSourceArray[indexPath.row];
+    cell.textLabel.text = _titlesArray[indexPath.row];
     return cell;
 }
 
