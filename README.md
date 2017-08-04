@@ -112,7 +112,17 @@
  */
 @property (nonatomic,assign) CGFloat contentOffset;
 
+/**
+ kvoEnable
+ */
 @property (nonatomic,assign) BOOL kvoEnable;
+
+/**
+ 代理
+ */
+@property (nonatomic,weak) id <ZYWCandleProtocol> delegate;
+
+#pragma mark BaseMethod
 
 /**
  长按手势返回对应model的相对位置
@@ -122,9 +132,24 @@
  */
 - (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
 
+/**
+ 填充方法
+ */
 - (void)stockFill;
+
+/**
+  动态计算K线宽度
+ */
 - (void)calcuteCandleWidth;
+
+/**
+ 更新K线宽度
+ */
 - (void)updateWidth;
+
+/**
+ 绘制K线
+ */
 - (void)drawKLine;
 ```
 ## Contact
