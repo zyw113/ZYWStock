@@ -22,6 +22,8 @@
 - 新增分时图
 ### V0.3
 - 优化代码
+### V1.0
+- 整体代码修正
 ## 代理方法
 ```
 /**
@@ -52,7 +54,6 @@
  加载更多数据
  */
 - (void)displayMoreData;
-```
 ### 基础属性方法
 ```
 /**
@@ -110,18 +111,21 @@
  */
 @property (nonatomic,assign) CGFloat contentOffset;
 
+/**
+ kvoEnable
+ */
 @property (nonatomic,assign) BOOL kvoEnable;
 
 /**
- 长按手势返回对应model的相对位置
-
- @param xPostion 手指在屏幕的位置
- @return 距离手指位置最近的model位置
+ 代理
  */
+@property (nonatomic,weak) id <ZYWCandleProtocol> delegate;
+
 - (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
 
 /**
- 填充
+ 填充方法
+
  */
 - (void)stockFill;
 
@@ -141,7 +145,7 @@
 - (void)updateWidth;
 
 /**
- 绘制主方法
+ 绘制K线
  */
 - (void)drawKLine;
 ```
