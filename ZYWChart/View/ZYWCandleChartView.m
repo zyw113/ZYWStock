@@ -18,7 +18,7 @@ static inline bool isEqualZero(float value)
     return fabsf(value) <= 0.00001f;
 }
 
-@interface ZYWCandleChartView () <UIScrollViewDelegate>
+@interface ZYWCandleChartView () <UIScrollViewDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong) UIScrollView *superScrollView;
 @property (nonatomic,strong) FBKVOController *KVOController;
@@ -81,6 +81,8 @@ static inline bool isEqualZero(float value)
     [super didMoveToSuperview];
     _superScrollView = (UIScrollView*)self.superview;
     _superScrollView.delegate = self;
+    UIPanGestureRecognizer *panGestureRecognizer = _superScrollView.panGestureRecognizer;
+    [panGestureRecognizer addTarget:self action:@selector(panGestureRecognizer:)];
     [self addListener];
 }
 
@@ -115,10 +117,10 @@ static inline bool isEqualZero(float value)
         if (self.maxY - self.minY < 0.5)
         {
             self.maxY += 0.5;
-            self.minY  -=  0.5;
+            self.minY -= 0.5;
         }
     }
-    self.scaleY = (self.height - self.topMargin - self.bottomMargin - self.timeLayerHeight) / (self.maxY-self.minY);
+    self.scaleY = (self.height - self.topMargin - self.bottomMargin - self.timeLayerHeight) / (self.maxY - self.minY);
 }
 
 - (void)calcuteMaLinePostion
@@ -137,7 +139,7 @@ static inline bool isEqualZero(float value)
         {
             ZYWLineUntil *until = lineData.data[j];
             CGFloat xPosition = self.leftPostion + ((self.candleWidth  + self.candleSpace) * j) + self.candleWidth/2;
-            CGFloat yPosition = ((self.maxY - until.value) *self.scaleY);
+            CGFloat yPosition = ((self.maxY - until.value) *self.scaleY) + self.topMargin;
             ZYWLineModel *model = [ZYWLineModel  initPositon:xPosition yPosition:yPosition color:lineData.color];
             [array addObject:model];
         }
@@ -155,9 +157,7 @@ static inline bool isEqualZero(float value)
 - (NSInteger)currentStartIndex
 {
     CGFloat scrollViewOffsetX = self.leftPostion < 0 ? 0 : self.leftPostion;
-
-    NSInteger leftArrCount = (scrollViewOffsetX) / (self.candleWidth+self.candleSpace);
-    
+    NSInteger leftArrCount = ABS(scrollViewOffsetX) / (self.candleWidth+self.candleSpace);
     if (leftArrCount > self.dataArray.count)
     {
         _currentStartIndex = self.dataArray.count - 1;
@@ -174,8 +174,7 @@ static inline bool isEqualZero(float value)
     }
     return _currentStartIndex;
 }
-
-- (CGFloat)leftPostion
+- (NSInteger)leftPostion
 {
     CGFloat scrollViewOffsetX = _contentOffset <  0  ?  0 : _contentOffset;
     if (_contentOffset + self.superScrollView.width >= self.superScrollView.contentSize.width)
@@ -187,12 +186,10 @@ static inline bool isEqualZero(float value)
 
 - (void)initCurrentDisplayModels
 {
-    NSInteger needDrawKLineCount = self.displayCount;
+    NSInteger needDrawKLineCount = self.displayCount ;
     NSInteger currentStartIndex = self.currentStartIndex;
     NSInteger count = (currentStartIndex + needDrawKLineCount) >self.dataArray.count ? self.dataArray.count :currentStartIndex+needDrawKLineCount;
-    
     [self.currentDisplayArray removeAllObjects];
-    
     if (currentStartIndex < count)
     {
         for (NSInteger i = currentStartIndex; i <  count ; i++)
@@ -213,7 +210,7 @@ static inline bool isEqualZero(float value)
         CGFloat close = ((self.maxY - entity.close) * self.scaleY);
         CGFloat high = ((self.maxY - entity.high) * self.scaleY);
         CGFloat low = ((self.maxY - entity.low) * self.scaleY);
-        CGFloat left = self.leftPostion+ ((self.candleWidth + self.candleSpace) * i);
+        CGFloat left = self.leftPostion+ ((self.candleWidth + self.candleSpace) * i) + self.leftMargin;
         
         if (left >= self.superScrollView.contentSize.width)
         {
@@ -334,7 +331,6 @@ static inline bool isEqualZero(float value)
     
     CGRect rect = CGRectMake(x, y, self.candleWidth, height);
     UIBezierPath *path = [UIBezierPath drawKLine:openPrice close:closePrice high:hightPrice low:lowPrice candleWidth:self.candleWidth rect:rect xPostion:x lineWidth:self.lineWidth];
-    
     CAShapeLayer *subLayer = [CAShapeLayer layer];
     if (postion.openPoint.y >= postion.closePoint.y)
     {
@@ -351,6 +347,26 @@ static inline bool isEqualZero(float value)
     subLayer.path = path.CGPath;
     [path removeAllPoints];
     return subLayer;
+}
+
+- (CATextLayer*)getTextLayer
+{
+    CATextLayer *layer = [CATextLayer layer];
+    layer.contentsScale = [UIScreen mainScreen].scale;
+    layer.fontSize = 12.f;
+    layer.alignmentMode = kCAAlignmentCenter;
+    layer.foregroundColor =
+    [UIColor grayColor].CGColor;
+    return layer;
+}
+
+- (CAShapeLayer*)getAxispLayer
+{
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.strokeColor = [UIColor colorWithHexString:@"ededed"].CGColor;
+    layer.fillColor = [[UIColor clearColor] CGColor];
+    layer.contentsScale = [UIScreen mainScreen].scale;
+    return layer;
 }
 
 #pragma mark draw
@@ -451,41 +467,39 @@ static inline bool isEqualZero(float value)
     [self.timeLayer addSublayer:centXLayer];
 }
 
-- (void)stockFill
-{
-    [self initConfig];
-    [self initLayer];
-    [self.superScrollView layoutIfNeeded];
-    [self calcuteCandleWidth];
-    [self updateWidth];
-    [self drawKLine];
-}
-
-#pragma mark publicMethod
-
-- (CATextLayer*)getTextLayer
-{
-    CATextLayer *layer = [CATextLayer layer];
-    layer.contentsScale = [UIScreen mainScreen].scale;
-    layer.fontSize = 12.f;
-    layer.alignmentMode = kCAAlignmentCenter;
-    layer.foregroundColor =
-    [UIColor grayColor].CGColor;
-    return layer;
-}
-
-- (CAShapeLayer*)getAxispLayer
-{
-    CAShapeLayer *layer = [CAShapeLayer layer];
-    layer.strokeColor = [UIColor colorWithHexString:@"ededed"].CGColor;
-    layer.fillColor = [[UIColor clearColor] CGColor];
-    layer.contentsScale = [UIScreen mainScreen].scale;
-    return layer;
-}
+#pragma mark 绘制
 
 - (void)calcuteCandleWidth
 {
-    self.candleWidth = (self.superScrollView.width - (self.displayCount - 1) * self.candleSpace) / self.displayCount;
+    self.candleWidth = (self.superScrollView.width - (self.displayCount - 1) * self.candleSpace - self.leftMargin - self.rightMargin) / self.displayCount;
+}
+
+- (void)updateWidth
+{
+    CGFloat klineWidth = self.dataArray.count*(self.candleWidth) + (self.dataArray.count - 1 ) *self.candleSpace + self.leftMargin + self.rightMargin;
+    if(klineWidth < self.superScrollView.width)
+    {
+        klineWidth = self.superScrollView.width;
+    }
+    
+    [self mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@(klineWidth));
+    }];
+    
+    self.superScrollView.contentSize = CGSizeMake(klineWidth,0);
+    [self layoutIfNeeded];
+    self.superScrollView.contentOffset = CGPointMake(klineWidth - self.superScrollView.width, 0);
+}
+
+-(void)initConfig
+{
+    self.leftMargin = 2;
+    self.rightMargin = 2;
+    self.topMargin = 20;
+    self.bottomMargin = 0;
+    self.minHeight = 1;
+    self.kvoEnable = YES;
+    self.timeLayerHeight = 15;
 }
 
 - (void)drawKLine
@@ -512,10 +526,30 @@ static inline bool isEqualZero(float value)
     [self drawAxisLine];
 }
 
-- (void)updateWidth
+- (void)stockFill
 {
-    CGFloat klineWidth = self.dataArray.count*(self.candleWidth+self.candleSpace);
+    [self initConfig];
+    [self initLayer];
+    [self.superScrollView layoutIfNeeded];
+    [self calcuteCandleWidth];
+    [self updateWidth];
+    [self drawKLine];
+}
+
+- (void)reload
+{
+    if (self.dataArray.count == 0)
+    {
+        [self mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.equalTo(@(self.superScrollView.width));
+        }];
+        
+        self.superScrollView.contentSize = CGSizeMake(self.superScrollView.width,0);
+        return;
+    }
     
+    CGFloat prevContentOffset = self.superScrollView.contentSize.width;
+    CGFloat klineWidth = self.dataArray.count*(self.candleWidth) + (self.dataArray.count - 1) *self.candleSpace + self.leftMargin + self.rightMargin;
     if(klineWidth < self.superScrollView.width)
     {
         klineWidth = self.superScrollView.width;
@@ -526,17 +560,9 @@ static inline bool isEqualZero(float value)
     }];
     
     self.superScrollView.contentSize = CGSizeMake(klineWidth,0);
+    self.superScrollView.contentOffset = CGPointMake(klineWidth - prevContentOffset,0);
     [self layoutIfNeeded];
-    self.superScrollView.contentOffset = CGPointMake(klineWidth - self.superScrollView.width, 0);
-}
-
--(void)initConfig
-{
-    self.topMargin = 20;
-    self.bottomMargin = 0;
-    self.minHeight = 3;
-    self.kvoEnable = YES;
-    self.timeLayerHeight = 15;
+    [self drawKLine];
 }
 
 #pragma mark 长按获取坐标
@@ -581,18 +607,37 @@ static inline bool isEqualZero(float value)
     return CGPointZero;
 }
 
-#pragma mark scrollViewDelegate
+#pragma mark panGestureRecognizerAction
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)panGestureRecognizer:(UIPanGestureRecognizer*)panGestureRecognizer
 {
-    if (scrollView.contentOffset.x<0)
+    switch (panGestureRecognizer.state)
     {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(displayMoreData)])
+        case UIGestureRecognizerStateBegan:
         {
-            //记录上一次的偏移量
-            self.previousOffsetX = _superScrollView.contentSize.width  -_superScrollView.contentOffset.x;
-            [_delegate displayMoreData];
-        }
+            
+        }break;
+            
+        case UIGestureRecognizerStateChanged:
+        {
+            
+        }break;
+            
+        case UIGestureRecognizerStateEnded:
+        {
+            //给定一个临界初始值(负数)
+            if (self.superScrollView.contentOffset.x <= -5)
+            {
+                if (self.delegate && [self.delegate respondsToSelector:@selector(displayMoreData)])
+                {
+                    //记录上一次的偏移量
+                    self.previousOffsetX = _superScrollView.contentSize.width  -_superScrollView.contentOffset.x;
+                    [_delegate displayMoreData];
+                }
+            }
+        }break;
+        default:
+            break;
     }
 }
 

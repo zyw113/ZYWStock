@@ -57,6 +57,7 @@ typedef enum
 @property (nonatomic,strong) UIView *verticalView;
 @property (nonatomic,strong) UIView *leavView;
 @property (nonatomic,strong) CandleCrossScreenVC *screenVC;
+@property (nonatomic,strong) UIActivityIndicatorView *activityView;
 
 @end
 
@@ -71,12 +72,26 @@ typedef enum
     [self addBottomViews];
     [self initCrossLine];
     [self addPriceView];
+    [self addActivityView];
     self.view.backgroundColor = [UIColor whiteColor];
     self.dataSource = [NSMutableArray array];
     [self loadData];
 }
 
 #pragma mark 添加视图
+
+- (void)addActivityView
+{
+    _activityView = [UIActivityIndicatorView new];
+    [self.view addSubview:_activityView];
+    _activityView.hidesWhenStopped = YES;
+    _activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [_activityView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(@(5));
+        make.centerY.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(15, 15));
+    }];
+}
 
 - (void)addQuotaView
 {
@@ -94,6 +109,8 @@ typedef enum
 {
     _scrollView = [UIScrollView new];
     [self.view addSubview:_scrollView];
+    _scrollView.scrollEnabled = YES;
+    _scrollView.bounces = YES;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.backgroundColor = [UIColor whiteColor];
     [_scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -401,19 +418,19 @@ typedef enum
         CGFloat scrollViewPinCenterX =  pinCenterX;
         NSInteger pinCenterLeftCount = scrollViewPinCenterX / (_candleChartView.candleWidth + _candleChartView.candleSpace);
         pinCenterLeftCount = _candleChartView.currentStartIndex;
-        CGFloat newDisplayCount = diffScale > 0 ? (displayCount-1) : (1 + displayCount);
+        CGFloat newDisplayCount = diffScale > 0 ? (displayCount - 1) : (1 + displayCount);
      
         if (newDisplayCount+pinCenterLeftCount > _candleChartView.dataArray.count)
         {
             newDisplayCount = _candleChartView.dataArray.count - pinCenterLeftCount;
         }
         
-        if (newDisplayCount <MinCount && scale >=1)
+        if (newDisplayCount < MinCount && scale >=1)
         {
             newDisplayCount = MinCount;
         }
         
-        if (newDisplayCount >MaxCount && scale < 1)
+        if (newDisplayCount > MaxCount && scale < 1)
         {
             newDisplayCount = MaxCount;
         }
@@ -504,31 +521,41 @@ typedef enum
     {
         [newMarray addObject:object];
     }
-    [self reloadData:newMarray];
+    [self reloadData:newMarray reload:NO];
 }
 
-- (void)reloadData:(NSMutableArray*)array
+- (void)reloadData:(NSMutableArray*)array reload:(BOOL)reload
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         _macdView.dataArray = computeMACDData(array).mutableCopy;
-       _kdjLineView.dataArray = computeKDJData(array).mutableCopy;
+        _kdjLineView.dataArray = computeKDJData(array).mutableCopy;
         _wrLineView.dataArray = computeWRData(array,10).mutableCopy;
-        NSInteger count = self.candleChartView.displayCount;
-        NSInteger index = count / 3;
-        
         for (NSInteger i = 0;i<array.count;i++)
         {
             ZYWCandleModel *model = array[i];
-            if (i % index == 0)
+            if (i % 16 == 0)
             {
                 model.isDrawDate = YES;
+            }
+            
+            else
+            {
+                model.isDrawDate = NO;
             }
         }
         
         self.candleChartView.dataArray = array;
 
         dispatch_async(dispatch_get_main_queue(), ^{
-           [self.candleChartView stockFill];
+            if (reload)
+            {
+                [self.candleChartView reload];
+            }
+            
+            else
+            {
+                [self.candleChartView stockFill];
+            }
         });
     });
 }
@@ -610,13 +637,26 @@ typedef enum
 
 - (void)displayMoreData
 {
-    NSLog(@"没有更多数据了");
- /*---实现右滑加载加载更多注意点--*/
-/*
- 1. 重新设置数据源
- 2. 调用 reloadData:(NSMutableArray*)array 方法
- 3. 设置scrollView的偏移量 self.scrollView.contentOffset = CGPointMake( self.candleChartView.previousOffsetX, 0);
- */
+    NSLog(@"正在加载更多....");
+    [_activityView startAnimating];
+    __weak typeof(self) this = self;
+    dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0* NSEC_PER_SEC));
+    
+    dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+        [this loadMoreData];
+    });
+}
+
+- (void)loadMoreData
+{
+    NSMutableArray *tempArray = _candleChartView.dataArray.mutableCopy;
+    for (NSInteger i = 0; i < _candleChartView.dataArray.count; i++) {
+        ZYWCandleModel *model = _candleChartView.dataArray[i];
+        [tempArray addObject:model];
+    }
+    [self reloadData:tempArray reload:YES];
+    
+    [_activityView stopAnimating];
 }
 
 #pragma mark 屏幕相关

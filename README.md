@@ -56,7 +56,7 @@
 ### 基础属性方法
 ```
 /**
- 数据源数组 在调用绘制方法之前设置 。Demo中数据源个数是固定的，如需实现类似右拉加载更多效果(参考网易贵金属)，需要在每次添加数据的时候设置 然后调用绘制方法 (现在本地数据是重复的6组)
+ 数据源数组 在调用绘制方法之前设置
  */
 @property (nonatomic,strong) NSMutableArray<__kindof ZYWCandleModel*> *dataArray;
 
@@ -120,9 +120,29 @@
  */
 - (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
 
+/**
+ 填充
+ */
 - (void)stockFill;
+
+/**
+ 刷新右拉加载调用
+ */
+- (void)reload;
+
+/**
+ 宽度计算
+ */
 - (void)calcuteCandleWidth;
+
+/**
+ 更新宽度
+ */
 - (void)updateWidth;
+
+/**
+ 绘制主方法
+ */
 - (void)drawKLine;
 ```
 ## Contact

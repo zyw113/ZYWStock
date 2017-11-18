@@ -13,7 +13,7 @@
 @interface ZYWCandleChartView : ZYWBaseChartView<ZYWCandleProtocol>
 
 /**
- 数据源数组 在调用绘制方法之前设置 。Demo中数据源个数是固定的，如需实现类似右拉加载更多效果(参考网易贵金属)，需要在每次添加数据的时候设置 然后调用绘制方法 (现在本地数据是重复的6组)
+ 数据源数组 在调用绘制方法之前设置
  */
 @property (nonatomic,strong) NSMutableArray<__kindof ZYWCandleModel*> *dataArray;
 
@@ -28,7 +28,7 @@
 @property (nonatomic,strong) NSMutableArray *currentPostionArray;
 
 /**
- 可视区域显示多少根k线 (如果数据源数组不足以占满屏幕，需要手动给定宽度)
+ 可视区域显示多少根k线 
  */
 @property (nonatomic,assign) NSInteger displayCount;
 
@@ -50,7 +50,7 @@
 /**
  当前屏幕范围内绘制起点位置
  */
-@property (nonatomic,assign) CGFloat leftPostion;
+@property (nonatomic,assign) NSInteger leftPostion;
 
 /**
  当前绘制的起始下标
@@ -77,9 +77,29 @@
  */
 - (CGPoint)getLongPressModelPostionWithXPostion:(CGFloat)xPostion;
 
+/**
+ 填充
+ */
 - (void)stockFill;
+
+/**
+ 刷新右拉加载调用
+ */
+- (void)reload;
+
+/**
+ 宽度计算
+ */
 - (void)calcuteCandleWidth;
+
+/**
+ 更新宽度
+ */
 - (void)updateWidth;
+
+/**
+ 绘制主方法
+ */
 - (void)drawKLine;
 
 @property (nonatomic,weak) id <ZYWCandleProtocol> delegate;

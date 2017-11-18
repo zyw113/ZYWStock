@@ -49,22 +49,23 @@ static inline bool isEqualZero(float value)
         self.maxY += 0.5;
         self.minY += 0.5;
     }
-    self.topMargin = 0;
+    self.topMargin = 5;
     self.bottomMargin = 5;
+    self.leftMargin = 2;
     self.scaleY = (self.maxY - self.minY) / (self.height - self.topMargin - self.bottomMargin);
 }
 
-- (void)initMaModelPosition
+- (void)calMaModelPosition
 {
     for (NSInteger i = 0;i < self.displayArray.count;i++)
     {
         ZYWMacdModel *lineData = [self.displayArray objectAtIndex:i];
-        CGFloat xPosition = self.leftPostion + ((self.candleSpace+self.candleWidth) * i) ;
+        CGFloat xPosition = self.leftPostion + ((self.candleSpace+self.candleWidth) * i) + self.leftMargin;
         CGFloat yPosition = ABS((self.maxY - lineData.macd)/self.scaleY) + self.topMargin ;
         //macd
         ZYWMacdPostionModel *model = [[ZYWMacdPostionModel alloc] init];
         model.endPoint = CGPointMake(xPosition, yPosition);
-        model.startPoint = CGPointMake(xPosition,self.maxY/self.scaleY);
+        model.startPoint = CGPointMake(xPosition,self.maxY/self.scaleY + self.topMargin);
         
         float x = model.startPoint.y - model.endPoint.y;
         if (isEqualZero(x))
@@ -86,23 +87,24 @@ static inline bool isEqualZero(float value)
     }
 }
 
-- (CAShapeLayer*)drawMacdLayer:(ZYWMacdPostionModel*)model candleModel:(ZYWMacdModel*)candleModel
+- (CAShapeLayer*)drawMacdLayer:(ZYWMacdPostionModel*)model candleModel:(ZYWMacdModel*)macdModel
 {
-    CGRect rect;
-    if (model.startPoint.y<=0)
+    CGRect rect = CGRectZero;
+    CGFloat y = self.maxY/self.scaleY + self.topMargin;
+    if (macdModel.macd > 0)
     {
-        rect = CGRectMake(model.startPoint.x,self.topMargin, self.candleWidth, model.endPoint.y - model.startPoint.y);
+        rect = CGRectMake(model.startPoint.x, model.endPoint.y, self.candleWidth, ABS(y - model.endPoint.y));
     }
     
     else
     {
-        rect = CGRectMake(model.startPoint.x,model.startPoint.y, self.candleWidth, model.endPoint.y - model.startPoint.y);
+        rect = CGRectMake(model.startPoint.x,y, self.candleWidth, ABS(model.endPoint.y - model.startPoint.y));
     }
     
     UIBezierPath *path = [UIBezierPath bezierPathWithRect:rect];
     CAShapeLayer *subLayer = [CAShapeLayer layer];
     subLayer.path = path.CGPath;
-    if (candleModel.macd > 0)
+    if (macdModel.macd > 0)
     {
         subLayer.strokeColor = RoseColor.CGColor;
         subLayer.fillColor = RoseColor.CGColor;
@@ -178,7 +180,7 @@ static inline bool isEqualZero(float value)
 {
     [self removeFromSubLayer];
     [self removeAllObjectFromArray];
-    if (_startIndex +_displayCount > _dataArray.count)
+    if (_startIndex + _displayCount > _dataArray.count)
     {
          [self.displayArray addObjectsFromArray:[self.dataArray subarrayWithRange:NSMakeRange(_startIndex,_displayCount-1)]];
     }
@@ -187,9 +189,10 @@ static inline bool isEqualZero(float value)
     {
         [self.displayArray addObjectsFromArray:[self.dataArray subarrayWithRange:NSMakeRange(_startIndex,_displayCount)]];
     }
+    
     [self layoutIfNeeded];
     [self calcuteMaxAndMinValue];
-    [self initMaModelPosition];
+    [self calMaModelPosition];
     [self initLayer];
     [self drawLine];
 }

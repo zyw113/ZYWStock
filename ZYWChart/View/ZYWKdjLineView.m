@@ -100,7 +100,8 @@
         self.minY  += 0.5;
     }
     
-    self.topMargin = 0;
+    self.leftMargin = 2;
+    self.topMargin = 10;
     self.bottomMargin = 5;
     self.scaleY = (self.height - self.topMargin - self.bottomMargin)/(self.maxY-self.minY);
 }
@@ -117,7 +118,7 @@
         for (NSInteger j = 0;j<array.count;j++)
         {
             ZYWLineUntil *until = array[j];
-            CGFloat xPosition = self.leftPostion + ((self.candleWidth  + self.candleSpace) * j) + self.candleWidth/2;
+            CGFloat xPosition = self.leftPostion + ((self.candleWidth  + self.candleSpace) * j) + self.candleWidth/2 + self.leftMargin;
             CGFloat yPosition = ((self.maxY - until.value) *self.scaleY) + self.topMargin;
             ZYWLineModel *model = [ZYWLineModel  initPositon:xPosition yPosition:yPosition color:lineData.color];
             if ([lineData.title isEqualToString:@"K"])

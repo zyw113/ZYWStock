@@ -8,6 +8,7 @@
 
 #import "ZYWTimeLineView.h"
 #import "ZYWLineModel.h"
+
 @interface ZYWTimeLineView()
 
 @property (nonatomic,strong) NSMutableArray *modelPostionArray;
@@ -172,7 +173,7 @@
         [self.layer addSublayer:layer];
     }
     
-    for (NSInteger i = 1;i<3;i++)
+    for (NSInteger i = 1;i < 3;i++)
     {
         CGFloat x = self.width/3*(i);
         CAShapeLayer *layer = [CAShapeLayer layer];

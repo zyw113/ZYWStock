@@ -58,7 +58,7 @@
         self.maxY += 0.5;
         self.minY += 0.5;
     }
-    self.topMargin = 0;
+    self.topMargin = 10;
     self.bottomMargin = 5;
   
     self.scaleY = (self.height - self.topMargin - self.bottomMargin)/(self.maxY-self.minY);
