@@ -178,11 +178,11 @@ static inline bool isEqualZero(float value)
 
 - (void)stockFill
 {
-    [self removeFromSubLayer];
+   
     [self removeAllObjectFromArray];
     if (_startIndex + _displayCount > _dataArray.count)
     {
-         [self.displayArray addObjectsFromArray:[self.dataArray subarrayWithRange:NSMakeRange(_startIndex,_displayCount-1)]];
+         [self.displayArray addObjectsFromArray:[self.dataArray subarrayWithRange:NSMakeRange(_startIndex,_displayCount - 1)]];
     }
     
     else
@@ -193,8 +193,12 @@ static inline bool isEqualZero(float value)
     [self layoutIfNeeded];
     [self calcuteMaxAndMinValue];
     [self calMaModelPosition];
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    [self removeFromSubLayer];
     [self initLayer];
     [self drawLine];
+    [CATransaction commit];
 }
 
 #pragma mark lazyLoad

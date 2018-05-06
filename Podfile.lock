@@ -8,6 +8,12 @@ DEPENDENCIES:
   - KVOController
   - Masonry
 
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - FHHFPSIndicator
+    - KVOController
+    - Masonry
+
 SPEC CHECKSUMS:
   FHHFPSIndicator: b4d34c3a93b702ad18358a4eb49839f83f4f30fb
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
@@ -15,4 +21,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 2644af91a9c289ad64191429137f117a1ce0470b
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.5.0

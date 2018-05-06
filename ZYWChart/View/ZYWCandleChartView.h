@@ -102,6 +102,8 @@
  */
 - (void)drawKLine;
 
+- (void)updateWidthWithNoOffset;
+
 @property (nonatomic,weak) id <ZYWCandleProtocol> delegate;
 
 @end

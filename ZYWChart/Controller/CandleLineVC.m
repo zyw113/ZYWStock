@@ -18,6 +18,7 @@
 #import "ZYWQuotaView.h"
 #import "ZYWCandleProtocol.h"
 #import "CandleCrossScreenVC.h"
+#import "ZYWCandlePostionModel.h"
 
 typedef enum
 {
@@ -32,7 +33,7 @@ typedef enum
 #define BottomViewScale 0.33
 
 #define MinCount 10
-#define MaxCount 30
+#define MaxCount 100
 
 @interface CandleLineVC ()<NSXMLParserDelegate,ZYWCandleProtocol,ZYWTecnnicalViewDelegate,CandleCrossScreenVCDeleate>
 
@@ -58,6 +59,10 @@ typedef enum
 @property (nonatomic,strong) UIView *leavView;
 @property (nonatomic,strong) CandleCrossScreenVC *screenVC;
 @property (nonatomic,strong) UIActivityIndicatorView *activityView;
+
+@property (nonatomic, assign) NSUInteger zoomRightIndex;
+@property (nonatomic, assign) CGFloat currentZoom;
+@property (nonatomic, assign) NSInteger displayCount;
 
 @end
 
@@ -126,7 +131,7 @@ typedef enum
     _candleChartView = [ZYWCandleChartView new];
     [_scrollView addSubview:_candleChartView];
     _candleChartView.delegate = self;
-    
+    _currentZoom = -.001f;
     [_candleChartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_scrollView);
         make.right.equalTo(_scrollView);
@@ -136,6 +141,7 @@ typedef enum
   
     _candleChartView.candleSpace = 2;
     _candleChartView.displayCount = 25;
+    _displayCount = _candleChartView.displayCount;
     _candleChartView.lineWidth = 1*widthradio;
 }
 
@@ -238,7 +244,7 @@ typedef enum
     _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGesture:)];
     [self.candleChartView addGestureRecognizer:_longPressGesture];
     
-    _pinchPressGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
+    _pinchPressGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchesView:)];
     [self.scrollView addGestureRecognizer:_pinchPressGesture];
     
     _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
@@ -380,70 +386,62 @@ typedef enum
 
 #pragma mark 缩放手势
 
-- (void)pinchGesture:(UIPinchGestureRecognizer*)pinchPress
+- (void)pinchesView:(UIPinchGestureRecognizer *)pinchTap
 {
-    if (pinchPress.numberOfTouches < 2)
+    if (pinchTap.state == UIGestureRecognizerStateEnded)
     {
-         _candleChartView.kvoEnable = YES;
-         _scrollView.scrollEnabled = YES;
-          return;
+        _currentZoom = pinchTap.scale;
+        self.scrollView.scrollEnabled = YES;
     }
     
-    switch (pinchPress.state) {
-        case UIGestureRecognizerStateBegan:
-        {
-            _scrollView.scrollEnabled = NO;
-            _candleChartView.kvoEnable = NO;
-        }break;
-        case UIGestureRecognizerStateEnded:
-        {
-            _scrollView.scrollEnabled = YES;
-            _candleChartView.kvoEnable = YES;
-        }break;
-        default:
-            break;
+    else if (pinchTap.state == UIGestureRecognizerStateBegan && _currentZoom != 0.0f)
+    {
+        self.scrollView.scrollEnabled = NO;
+        pinchTap.scale = _currentZoom;
+        
+        ZYWCandlePostionModel *model = self.candleChartView.currentPostionArray.lastObject;
+        _zoomRightIndex = model.localIndex + 1;
     }
     
-    CGFloat scale = pinchPress.scale;
-    CGFloat originScale= 1.0;
-    CGFloat minScale = 0.03;
-    NSInteger displayCount = self.candleChartView.displayCount;
-    CGFloat diffScale = scale - originScale;
-    
-    if (fabs(diffScale) > minScale)
+    else if (pinchTap.state == UIGestureRecognizerStateChanged)
     {
-        CGPoint point1 = [pinchPress locationOfTouch:0 inView:self.scrollView];
-        CGPoint point2 = [pinchPress locationOfTouch:1 inView:self.scrollView];
-        CGFloat pinCenterX = (point1.x + point2.x) / 2;
-        CGFloat scrollViewPinCenterX =  pinCenterX;
-        NSInteger pinCenterLeftCount = scrollViewPinCenterX / (_candleChartView.candleWidth + _candleChartView.candleSpace);
-        pinCenterLeftCount = _candleChartView.currentStartIndex;
-        CGFloat newDisplayCount = diffScale > 0 ? (displayCount - 1) : (1 + displayCount);
-     
-        if (newDisplayCount+pinCenterLeftCount > _candleChartView.dataArray.count)
+        CGFloat tmpZoom = 0.f;
+        if (isnan(_currentZoom))
         {
-            newDisplayCount = _candleChartView.dataArray.count - pinCenterLeftCount;
+            return;
+        }
+        tmpZoom = (pinchTap.scale)/ _currentZoom;
+        _currentZoom = pinchTap.scale;
+        NSInteger showNum = round(_displayCount / tmpZoom);
+        
+        if (showNum == _displayCount)
+        {
+            return;
         }
         
-        if (newDisplayCount < MinCount && scale >=1)
-        {
-            newDisplayCount = MinCount;
-        }
+        if (showNum >= _displayCount && _displayCount == MaxCount) return;
+        if (showNum <= _displayCount && _displayCount == MinCount) return;
         
-        if (newDisplayCount > MaxCount && scale < 1)
-        {
-            newDisplayCount = MaxCount;
-        }
+        _displayCount = showNum;
+        _displayCount = _displayCount < MinCount ? MinCount : _displayCount;
+        _displayCount = _displayCount > MaxCount ? MaxCount : _displayCount;
         
-        _candleChartView.displayCount = (NSInteger)newDisplayCount;
+        _candleChartView.displayCount = _displayCount;
         [_candleChartView calcuteCandleWidth];
-        [_candleChartView updateWidth];
-        
-        CGFloat newPinCenterX = pinCenterLeftCount * _candleChartView.candleWidth + (pinCenterLeftCount) * _candleChartView.candleSpace;
-        CGFloat newOffsetX = newPinCenterX;
-        _scrollView.contentOffset = CGPointMake(newOffsetX > 0 ? newOffsetX : 0, 0);
-        _candleChartView.contentOffset = _scrollView.contentOffset.x;
+        [_candleChartView updateWidthWithNoOffset];
         [_candleChartView drawKLine];
+        CGFloat offsetX = fabs(_zoomRightIndex* (self.candleChartView.candleSpace + self.candleChartView.candleWidth) - self.scrollView.width + self.candleChartView.leftMargin) ;
+        if (offsetX <= self.scrollView.frame.size.width)
+        {
+            offsetX = 0;
+        }
+        
+        if (offsetX > self.scrollView.contentSize.width - self.scrollView.frame.size.width)
+        {
+            offsetX = self.scrollView.contentSize.width - self.scrollView.frame.size.width;
+        }
+        
+        self.scrollView.contentOffset = CGPointMake(offsetX, 0);
     }
 }
 

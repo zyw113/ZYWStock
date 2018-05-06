@@ -37,6 +37,8 @@
 
 @property (nonatomic,assign) BOOL isDrawDate;
 
+@property (assign, nonatomic) NSInteger localIndex;
+
 + (instancetype) modelWithOpen:(CGPoint)openPoint close:(CGPoint)closePoint high:(CGPoint)highPoint low:(CGPoint)lowPoint date:(NSString*)date;
 
 @end

@@ -24,13 +24,15 @@ static inline bool isEqualZero(float value)
 @property (nonatomic,strong) FBKVOController *KVOController;
 @property (nonatomic,strong) NSMutableArray *modelArray;
 @property (nonatomic,strong) NSMutableArray *modelPostionArray;
-@property (nonatomic,strong) CAShapeLayer *lineChartLayer;
 @property (nonatomic,strong) CAShapeLayer *ma5LineLayer;
 @property (nonatomic,strong) CAShapeLayer *ma10LineLayer;
 @property (nonatomic,strong) CAShapeLayer *ma25LineLayer;
 @property (nonatomic,strong) CAShapeLayer *timeLayer;
 @property (nonatomic,strong) NSMutableArray *maPostionArray;
 @property (nonatomic,assign) CGFloat timeLayerHeight;
+
+@property (nonatomic,strong) CAShapeLayer *redLayer;
+@property (nonatomic,strong) CAShapeLayer *greenLayer;
 
 @end
 
@@ -83,7 +85,7 @@ static inline bool isEqualZero(float value)
     _superScrollView.delegate = self;
     UIPanGestureRecognizer *panGestureRecognizer = _superScrollView.panGestureRecognizer;
     [panGestureRecognizer addTarget:self action:@selector(panGestureRecognizer:)];
-    [self addListener];
+  //  [self addListener];
 }
 
 - (void)addListener
@@ -188,13 +190,14 @@ static inline bool isEqualZero(float value)
 {
     NSInteger needDrawKLineCount = self.displayCount ;
     NSInteger currentStartIndex = self.currentStartIndex;
-    NSInteger count = (currentStartIndex + needDrawKLineCount) >self.dataArray.count ? self.dataArray.count :currentStartIndex+needDrawKLineCount;
+    NSInteger count = (currentStartIndex + needDrawKLineCount) >self.dataArray.count ? self.dataArray.count :currentStartIndex + needDrawKLineCount;
     [self.currentDisplayArray removeAllObjects];
     if (currentStartIndex < count)
     {
         for (NSInteger i = currentStartIndex; i <  count ; i++)
         {
             ZYWCandleModel *model = self.dataArray[i];
+            model.localIndex = i;
             [self.currentDisplayArray addObject:model];
         }
     }
@@ -219,6 +222,8 @@ static inline bool isEqualZero(float value)
         
         ZYWCandlePostionModel *positionModel = [ZYWCandlePostionModel modelWithOpen:CGPointMake(left, open) close:CGPointMake(left, close) high:CGPointMake(left, high) low:CGPointMake(left,low) date:entity.date];
         positionModel.isDrawDate = entity.isDrawDate;
+        positionModel.localIndex = entity.localIndex;
+        
         [self.currentPostionArray addObject:positionModel];
     }
 }
@@ -227,36 +232,36 @@ static inline bool isEqualZero(float value)
 
 - (void)removeAllSubLayers
 {
-    for (NSInteger i = 0 ; i < self.lineChartLayer.sublayers.count; i++)
-    {
-        CAShapeLayer *layer = (CAShapeLayer*)self.lineChartLayer.sublayers[i];
-        [layer removeFromSuperlayer];
-        layer = nil;
-    }
-    
     for (NSInteger i = 0 ; i < self.timeLayer.sublayers.count; i++)
     {
         id layer = self.timeLayer.sublayers[i];
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
         [layer removeFromSuperlayer];
         layer = nil;
+        [CATransaction commit];
     }
 }
 
 - (void)initLayer
 {
-    if (self.lineChartLayer)
+    if (!self.redLayer)
     {
-        [self.lineChartLayer removeFromSuperlayer];
-        self.lineChartLayer = nil;
+        self.redLayer = [CAShapeLayer layer];
+        [self.layer addSublayer:self.redLayer];
     }
     
-    if (!self.lineChartLayer)
+    if (self.greenLayer)
     {
-        self.lineChartLayer = [CAShapeLayer layer];
-        self.lineChartLayer.strokeColor = [UIColor clearColor].CGColor;
-        self.lineChartLayer.fillColor = [UIColor clearColor].CGColor;
+        [self.greenLayer removeFromSuperlayer];
+        self.greenLayer = nil;
     }
-    [self.layer addSublayer:self.lineChartLayer];
+    
+    if (!self.greenLayer)
+    {
+        self.greenLayer = [CAShapeLayer layer];
+        [self.layer addSublayer:self.greenLayer];
+    }
     
     if (self.timeLayer)
     {
@@ -369,15 +374,89 @@ static inline bool isEqualZero(float value)
     return layer;
 }
 
+- (void)addCandleRef:(CGMutablePathRef)ref postion:(ZYWCandlePostionModel*)postion
+{
+    CGFloat openPrice = postion.openPoint.y + self.topMargin;
+    CGFloat closePrice = postion.closePoint.y + self.topMargin;
+    CGFloat hightPrice = postion.highPoint.y + self.topMargin;
+    CGFloat lowPrice = postion.lowPoint.y + self.topMargin;
+    CGFloat x = postion.openPoint.x;
+    CGFloat y = openPrice > closePrice ? (closePrice) : (openPrice);
+    CGFloat height = MAX(fabs(closePrice-openPrice), _minHeight);
+    CGRect rect = CGRectMake(x, y, _candleWidth, height);
+    
+    if (isEqualZero(fabs(closePrice-openPrice)))
+    {
+        rect = CGRectMake(x, closePrice - height, _candleWidth, height);
+    }
+    
+    CGPathAddRect(ref, NULL, rect);
+    
+    CGFloat xPostion = x + _candleWidth / 2;
+    if (closePrice < openPrice)
+    {
+        if (!isEqualZero(closePrice - hightPrice))
+        {
+            CGPathMoveToPoint(ref, NULL, xPostion, closePrice);
+            CGPathAddLineToPoint(ref, NULL, xPostion, hightPrice);
+        }
+        
+        if (!isEqualZero(lowPrice - openPrice))
+        {
+            CGPathMoveToPoint(ref, NULL, xPostion, lowPrice);
+            CGPathAddLineToPoint(ref, NULL, xPostion, openPrice + _lineWidth/2.f);
+        }
+    }
+    
+    else
+    {
+        if (!isEqualZero(openPrice - hightPrice))
+        {
+            CGPathMoveToPoint(ref, NULL, xPostion, openPrice);
+            CGPathAddLineToPoint(ref, NULL, xPostion, hightPrice);
+        }
+        
+        if (!isEqualZero(lowPrice - closePrice))
+        {
+            CGPathMoveToPoint(ref, NULL, xPostion, lowPrice);
+            CGPathAddLineToPoint(ref, NULL, xPostion, closePrice - _lineWidth);
+        }
+    }
+}
+
 #pragma mark draw
 
 - (void)drawCandleSublayers
 {
-    __weak typeof(self) this = self;
-    [_currentPostionArray enumerateObjectsUsingBlock:^(ZYWCandlePostionModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        CAShapeLayer *subLayer = [this getShaperLayer:obj];
-        [this.lineChartLayer addSublayer:subLayer];
-    }];
+    CGMutablePathRef redRef = CGPathCreateMutable();
+    CGMutablePathRef greenRef = CGPathCreateMutable();
+    for (ZYWCandlePostionModel *model in _currentPostionArray) {
+        
+        if (model.openPoint.y < model.closePoint.y)
+        {
+            [self addCandleRef:redRef postion:model];
+        }
+        
+        else if (model.openPoint.y > model.closePoint.y)
+        {
+            [self addCandleRef:greenRef postion:model];
+        }
+        
+        else
+        {
+            [self addCandleRef:redRef postion:model];
+        }
+    }
+    
+    self.redLayer.lineWidth = (1 / [UIScreen mainScreen].scale) *1.5f;
+    self.redLayer.path = redRef;
+    self.redLayer.fillColor = RoseColor.CGColor;
+    self.redLayer.strokeColor = RoseColor.CGColor;
+    
+    self.greenLayer.lineWidth = (1 / [UIScreen mainScreen].scale) *1.5f;
+    self.greenLayer.path = greenRef;
+    self.greenLayer.fillColor = DropColor.CGColor;
+    self.greenLayer.strokeColor = DropColor.CGColor;
 }
 
 - (void)drawMALineLayer
@@ -469,6 +548,29 @@ static inline bool isEqualZero(float value)
 
 #pragma mark 绘制
 
+- (void)updateWidthWithNoOffset
+{
+    if (self.dataArray.count == 0)
+    {
+        return;
+    }
+    CGFloat klineWidth = self.dataArray.count*(self.candleWidth) + (self.dataArray.count - 1) *self.candleSpace + self.leftMargin + self.rightMargin;
+    if(klineWidth < self.superScrollView.width)
+    {
+        klineWidth = self.superScrollView.width;
+    }
+    
+    if (isnan(klineWidth) || isinf(klineWidth))
+    {
+        return;
+    }
+    
+    [self mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@(klineWidth));
+    }];
+    self.superScrollView.contentSize = CGSizeMake(klineWidth,0);
+}
+
 - (void)calcuteCandleWidth
 {
     self.candleWidth = (self.superScrollView.width - (self.displayCount - 1) * self.candleSpace - self.leftMargin - self.rightMargin) / self.displayCount;
@@ -504,26 +606,29 @@ static inline bool isEqualZero(float value)
 
 - (void)drawKLine
 {
-    [self removeAllSubLayers];
     [self initCurrentDisplayModels];
     if (self.delegate && [self.delegate respondsToSelector: @selector(displayScreenleftPostion:startIndex:count:)])
     {
         [_delegate displayScreenleftPostion:self.leftPostion startIndex:self.currentStartIndex count:self.displayCount];
     }
-    
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(displayLastModel:)])
     {
         ZYWCandleModel *lastModel = self.currentDisplayArray.lastObject;
         [_delegate displayLastModel:lastModel];
     }
-    
+
     [self calcuteMaxAndMinValue];
-    [self initLayer];
     [self initModelPositoin];
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    [self removeAllSubLayers];
+    [self initLayer];
     [self drawCandleSublayers];
     [self drawMALayer];
     [self drawTimeLayer];
     [self drawAxisLine];
+    [CATransaction commit];
 }
 
 - (void)stockFill
@@ -563,6 +668,19 @@ static inline bool isEqualZero(float value)
     self.superScrollView.contentOffset = CGPointMake(klineWidth - prevContentOffset,0);
     [self layoutIfNeeded];
     [self drawKLine];
+}
+
+- (void)displayLayer:(CALayer *)layer
+{
+    [self drawKLine];
+}
+
+#pragma mark scrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    self.contentOffset = scrollView.contentOffset.x;
+    [self.layer setNeedsDisplay];
 }
 
 #pragma mark 长按获取坐标
