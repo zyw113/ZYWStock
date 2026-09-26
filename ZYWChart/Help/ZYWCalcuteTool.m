@@ -11,6 +11,26 @@
 #import "ZYWCandleModel.h"
 #import "ZYWMacdModel.h"
 
+void ZYWComputeSMA(const CGFloat *values, NSUInteger count, NSUInteger period, CGFloat *outValues)
+{
+    if (NULL == values || NULL == outValues || 0 == count || 0 == period)
+    {
+        return;
+    }
+
+    double sum = 0.0;
+    for (NSUInteger index = 0; index < count; index++)
+    {
+        sum += values[index];
+        if (index >= period)
+        {
+            sum -= values[index - period];
+        }
+        NSUInteger window = MIN(index + 1, period);
+        outValues[index] = (CGFloat)(sum / window);
+    }
+}
+
 ZYWLineData * computeMAData(NSArray *items,int period)
 {
     NSMutableArray *arrCls = [[NSMutableArray alloc] init];
@@ -46,6 +66,9 @@ ZYWLineData * computeMAData(NSArray *items,int period)
             [maData addObject:[[ZYWLineUntil alloc] initWithValue:[[arr objectAtIndex:index] doubleValue] date:item.date]];
         }
     }
+    freeAndSetNULL(inCls);
+    freeAndSetNULL(outReal);
+
     ZYWLineData *maline = [[ZYWLineData alloc] init];
     if (5 == period)
     {

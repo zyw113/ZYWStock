@@ -53,16 +53,11 @@ typedef enum
 @property (nonatomic,strong) ZYWPriceView *topPriceView;
 @property (nonatomic,strong) ZYWPriceView *bottomPriceView;
 @property (nonatomic,strong) UILongPressGestureRecognizer *longPressGesture;
-@property (nonatomic,strong) UIPinchGestureRecognizer *pinchPressGesture;
 @property (nonatomic,strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic,strong) UIView *verticalView;
 @property (nonatomic,strong) UIView *leavView;
 @property (nonatomic,strong) CandleCrossScreenVC *screenVC;
 @property (nonatomic,strong) UIActivityIndicatorView *activityView;
-
-@property (nonatomic, assign) NSUInteger zoomRightIndex;
-@property (nonatomic, assign) CGFloat currentZoom;
-@property (nonatomic, assign) NSInteger displayCount;
 
 @end
 
@@ -131,7 +126,6 @@ typedef enum
     _candleChartView = [ZYWCandleChartView new];
     [_scrollView addSubview:_candleChartView];
     _candleChartView.delegate = self;
-    _currentZoom = -.001f;
     [_candleChartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_scrollView);
         make.right.equalTo(_scrollView);
@@ -141,7 +135,8 @@ typedef enum
   
     _candleChartView.candleSpace = 2;
     _candleChartView.displayCount = 25;
-    _displayCount = _candleChartView.displayCount;
+    _candleChartView.minDisplayCount = MinCount;
+    _candleChartView.maxDisplayCount = MaxCount;
     _candleChartView.lineWidth = 1*widthradio;
 }
 
@@ -244,9 +239,6 @@ typedef enum
     _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGesture:)];
     [self.candleChartView addGestureRecognizer:_longPressGesture];
     
-    _pinchPressGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchesView:)];
-    [self.scrollView addGestureRecognizer:_pinchPressGesture];
-    
     _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
     _tapGesture.numberOfTapsRequired = 2;
     [self.candleChartView addGestureRecognizer:_tapGesture];
@@ -332,7 +324,7 @@ typedef enum
         _type = KDJ;
     }
     
-    [self showIndexLineView:self.candleChartView.leftPostion startIndex:self.candleChartView.currentStartIndex count:self.candleChartView.displayCount];
+    [self showIndexLineView:self.candleChartView.leftPostion startIndex:self.candleChartView.currentStartIndex count:self.candleChartView.visibleCount];
 }
 
 #pragma mark 长按手势
@@ -381,67 +373,6 @@ typedef enum
         
         oldPositionX = 0;
         self.scrollView.scrollEnabled = YES;
-    }
-}
-
-#pragma mark 缩放手势
-
-- (void)pinchesView:(UIPinchGestureRecognizer *)pinchTap
-{
-    if (pinchTap.state == UIGestureRecognizerStateEnded)
-    {
-        _currentZoom = pinchTap.scale;
-        self.scrollView.scrollEnabled = YES;
-    }
-    
-    else if (pinchTap.state == UIGestureRecognizerStateBegan && _currentZoom != 0.0f)
-    {
-        self.scrollView.scrollEnabled = NO;
-        pinchTap.scale = _currentZoom;
-        
-        ZYWCandlePostionModel *model = self.candleChartView.currentPostionArray.lastObject;
-        _zoomRightIndex = model.localIndex + 1;
-    }
-    
-    else if (pinchTap.state == UIGestureRecognizerStateChanged)
-    {
-        CGFloat tmpZoom = 0.f;
-        if (isnan(_currentZoom))
-        {
-            return;
-        }
-        tmpZoom = (pinchTap.scale)/ _currentZoom;
-        _currentZoom = pinchTap.scale;
-        NSInteger showNum = round(_displayCount / tmpZoom);
-        
-        if (showNum == _displayCount)
-        {
-            return;
-        }
-        
-        if (showNum >= _displayCount && _displayCount == MaxCount) return;
-        if (showNum <= _displayCount && _displayCount == MinCount) return;
-        
-        _displayCount = showNum;
-        _displayCount = _displayCount < MinCount ? MinCount : _displayCount;
-        _displayCount = _displayCount > MaxCount ? MaxCount : _displayCount;
-        
-        _candleChartView.displayCount = _displayCount;
-        [_candleChartView calcuteCandleWidth];
-        [_candleChartView updateWidthWithNoOffset];
-        [_candleChartView drawKLine];
-        CGFloat offsetX = fabs(_zoomRightIndex* (self.candleChartView.candleSpace + self.candleChartView.candleWidth) - self.scrollView.width + self.candleChartView.leftMargin) ;
-        if (offsetX <= self.scrollView.frame.size.width)
-        {
-            offsetX = 0;
-        }
-        
-        if (offsetX > self.scrollView.contentSize.width - self.scrollView.frame.size.width)
-        {
-            offsetX = self.scrollView.contentSize.width - self.scrollView.frame.size.width;
-        }
-        
-        self.scrollView.contentOffset = CGPointMake(offsetX, 0);
     }
 }
 
@@ -588,7 +519,6 @@ typedef enum
         [_macdView setHidden:NO];
         _macdView.candleSpace = _candleChartView.candleSpace;
         _macdView.candleWidth = _candleChartView.candleWidth;
-        _macdView.leftPostion = leftPostion;
         _macdView.startIndex = index;
         _macdView.displayCount = count;
          [_macdView stockFill];
@@ -605,7 +535,6 @@ typedef enum
         [_wrLineView setHidden:NO];
         _wrLineView.candleSpace = _candleChartView.candleSpace;
         _wrLineView.candleWidth = _candleChartView.candleWidth;
-        _wrLineView.leftPostion = leftPostion;
         _wrLineView.startIndex = index;
         _wrLineView.displayCount = count;
         [_wrLineView stockFill];
@@ -622,7 +551,6 @@ typedef enum
         [_wrLineView setHidden:YES];
         _kdjLineView.candleSpace = _candleChartView.candleSpace;
         _kdjLineView.candleWidth = _candleChartView.candleWidth;
-        _kdjLineView.leftPostion = leftPostion;
         _kdjLineView.startIndex = index;
         _kdjLineView.displayCount = count;
         [_kdjLineView stockFill];
@@ -647,13 +575,28 @@ typedef enum
 
 - (void)loadMoreData
 {
-    NSMutableArray *tempArray = _candleChartView.dataArray.mutableCopy;
-    for (NSInteger i = 0; i < _candleChartView.dataArray.count; i++) {
-        ZYWCandleModel *model = _candleChartView.dataArray[i];
-        [tempArray addObject:model];
+    NSArray<ZYWCandleModel *> *history = _candleChartView.dataArray;
+    if (history.count == 0)
+    {
+        [_activityView stopAnimating];
+        return;
+    }
+
+    //演示数据: 把同一段行情再接一段, 并整体平移, 避免衔接处出现价格断崖
+    CGFloat offset = history.lastObject.close - history.firstObject.close;
+    NSMutableArray *tempArray = history.mutableCopy;
+    for (ZYWCandleModel *model in history)
+    {
+        ZYWCandleModel *copy = [ZYWCandleModel new];
+        copy.open = model.open + offset;
+        copy.close = model.close + offset;
+        copy.high = model.high + offset;
+        copy.low = model.low + offset;
+        copy.date = model.date;
+        [tempArray addObject:copy];
     }
     [self reloadData:tempArray reload:YES];
-    
+
     [_activityView stopAnimating];
 }
 

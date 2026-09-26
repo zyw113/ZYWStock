@@ -6,17 +6,11 @@
 //  Copyright © 2017年 zyw113. All rights reserved.
 //
 
-#import "ZYWBaseChartView.h"
+#import "ZYWMultiLineView.h"
 
-@interface ZYWWrLineView : ZYWBaseChartView
-
-@property (nonatomic,strong) NSMutableArray *dataArray;
-@property (nonatomic, assign) CGFloat leftPostion;
-@property (nonatomic ,assign) CGFloat candleWidth;
-@property (nonatomic, assign) CGFloat candleSpace;
-@property (nonatomic, assign) NSInteger startIndex;
-@property (nonatomic, assign) NSInteger displayCount;
-
-- (void)stockFill;
+/**
+ WR 指标图, 数据源为一条折线
+ */
+@interface ZYWWrLineView : ZYWMultiLineView
 
 @end

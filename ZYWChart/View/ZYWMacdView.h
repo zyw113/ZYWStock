@@ -13,7 +13,6 @@
 
 @property (nonatomic,strong) NSMutableArray <__kindof ZYWMacdModel*>*dataArray;
 
-@property (nonatomic,assign) CGFloat    leftPostion;
 @property (nonatomic,assign) NSInteger startIndex;
 @property (nonatomic,assign) NSInteger displayCount;
 @property (nonatomic,assign) CGFloat    candleWidth;

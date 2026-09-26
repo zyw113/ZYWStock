@@ -7,248 +7,181 @@
 //
 
 #import "ZYWMacdView.h"
-#import "ZYWMacdPostionModel.h"
-#import "ZYWLineModel.h"
 
-static inline bool isEqualZero(float value)
- {
-    return fabsf(value) <= 0.00001f;
-}
+/// MACD柱的最小高度, 保证数值接近 0 时仍可见
+static const CGFloat ZYWMacdMinBarHeight = 1.f;
 
-@interface ZYWMacdView()
+@interface ZYWMacdView ()
 
-@property (nonatomic,strong) NSMutableArray *displayArray;
-@property (nonatomic,strong) NSMutableArray *macdArray;
-@property (nonatomic,strong) NSMutableArray *deaArray;
-@property (nonatomic,strong) NSMutableArray *diffArray;
-@property (nonatomic,strong) CAShapeLayer   *macdLayer;
+/// 常驻图层, 每帧只更新 path
+@property (nonatomic, strong) CAShapeLayer *riseBarLayer;
+@property (nonatomic, strong) CAShapeLayer *fallBarLayer;
+@property (nonatomic, strong) CAShapeLayer *deaLayer;
+@property (nonatomic, strong) CAShapeLayer *diffLayer;
+
+@property (nonatomic, strong) NSMutableArray<__kindof ZYWMacdModel *> *displayModels;
 
 @end
 
 @implementation ZYWMacdView
 
-- (void)calcuteMaxAndMinValue
+#pragma mark - 初始化
+
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    CGFloat maxPrice = 0;
-    CGFloat minPrice = 0;
-    
-    ZYWMacdModel *first = [self.displayArray objectAtIndex:0];
-    maxPrice = MAX(first.dea, MAX(first.diff, first.macd));
-    minPrice = MIN(first.dea, MIN(first.diff, first.macd));
-    
-    for (NSInteger i = 1;i<self.displayArray.count;i++)
+    self = [super initWithFrame:frame];
+    if (self)
     {
-        ZYWMacdModel *macdData = [self.displayArray objectAtIndex:i];
-        maxPrice = MAX(maxPrice, MAX(macdData.dea, MAX(macdData.diff, macdData.macd)));
-        minPrice = MIN(minPrice, MIN(macdData.dea, MIN(macdData.diff, macdData.macd)));
+        [self commonInit];
     }
-    self.maxY = maxPrice;
-    self.minY = minPrice;
-    if (self.maxY - self.minY < 0.5)
-    {
-        self.maxY += 0.5;
-        self.minY += 0.5;
-    }
-    self.topMargin = 5;
-    self.bottomMargin = 5;
-    self.leftMargin = 2;
-    self.scaleY = (self.maxY - self.minY) / (self.height - self.topMargin - self.bottomMargin);
+    return self;
 }
 
-- (void)calMaModelPosition
+- (instancetype)initWithCoder:(NSCoder *)coder
 {
-    for (NSInteger i = 0;i < self.displayArray.count;i++)
+    self = [super initWithCoder:coder];
+    if (self)
     {
-        ZYWMacdModel *lineData = [self.displayArray objectAtIndex:i];
-        CGFloat xPosition = self.leftPostion + ((self.candleSpace+self.candleWidth) * i) + self.leftMargin;
-        CGFloat yPosition = ABS((self.maxY - lineData.macd)/self.scaleY) + self.topMargin ;
-        //macd
-        ZYWMacdPostionModel *model = [[ZYWMacdPostionModel alloc] init];
-        model.endPoint = CGPointMake(xPosition, yPosition);
-        model.startPoint = CGPointMake(xPosition,self.maxY/self.scaleY + self.topMargin);
-        
-        float x = model.startPoint.y - model.endPoint.y;
-        if (isEqualZero(x))
-        {
-            //柱线的最小高度
-            model.endPoint = CGPointMake(xPosition,self.maxY/self.scaleY+1);
-        }
-        [self.macdArray addObject:model];
-        
-        //diff
-        CGFloat diffPostion = ABS((self.maxY - lineData.diff)/self.scaleY) +self.topMargin;
-        ZYWLineModel *difModel = [ZYWLineModel initPositon:xPosition+self.candleWidth/2 yPosition:diffPostion color:[UIColor redColor]];
-        [self.diffArray addObject:difModel];
-        
-        //dea
-        CGFloat deayPostion = ABS((self.maxY - lineData.dea)/self.scaleY) + self.topMargin;
-        ZYWLineModel *deaModel = [ZYWLineModel initPositon:xPosition+self.candleWidth/2 yPosition:deayPostion color:[UIColor redColor]];
-        [self.deaArray addObject:deaModel];
+        [self commonInit];
     }
+    return self;
 }
 
-- (CAShapeLayer*)drawMacdLayer:(ZYWMacdPostionModel*)model candleModel:(ZYWMacdModel*)macdModel
+- (void)commonInit
 {
-    CGRect rect = CGRectZero;
-    CGFloat y = self.maxY/self.scaleY + self.topMargin;
-    if (macdModel.macd > 0)
-    {
-        rect = CGRectMake(model.startPoint.x, model.endPoint.y, self.candleWidth, ABS(y - model.endPoint.y));
-    }
-    
-    else
-    {
-        rect = CGRectMake(model.startPoint.x,y, self.candleWidth, ABS(model.endPoint.y - model.startPoint.y));
-    }
-    
-    UIBezierPath *path = [UIBezierPath bezierPathWithRect:rect];
-    CAShapeLayer *subLayer = [CAShapeLayer layer];
-    subLayer.path = path.CGPath;
-    if (macdModel.macd > 0)
-    {
-        subLayer.strokeColor = RoseColor.CGColor;
-        subLayer.fillColor = RoseColor.CGColor;
-    }
-    else
-    {
-        subLayer.strokeColor = DropColor.CGColor;
-        subLayer.fillColor = DropColor.CGColor;
-    }
-    return subLayer;
+    _leftMargin = 2;
+    _topMargin = 5;
+    _bottomMargin = 5;
+    _displayModels = [NSMutableArray array];
+
+    _riseBarLayer = [self addShapeLayerWithColor:RoseColor filled:YES];
+    _fallBarLayer = [self addShapeLayerWithColor:DropColor filled:YES];
+    _deaLayer = [self addShapeLayerWithColor:UIColor.redColor filled:NO];
+    _diffLayer = [self addShapeLayerWithColor:UIColor.blackColor filled:NO];
 }
 
-- (void)drawLine
+- (CAShapeLayer *)addShapeLayerWithColor:(UIColor *)color filled:(BOOL)filled
 {
-    __weak typeof(self) this = self;
-    [_macdArray enumerateObjectsUsingBlock:^(ZYWMacdPostionModel* obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        ZYWMacdModel *model = this.displayArray[idx];
-        CAShapeLayer *layer = [this drawMacdLayer:obj candleModel:model];
-        [this.macdLayer addSublayer:layer];
-    }];
-
-    UIBezierPath *deaPath = [UIBezierPath drawLine:self.deaArray];
-    CAShapeLayer *deaLayer = [CAShapeLayer layer];
-    deaLayer.path = deaPath.CGPath;
-    deaLayer.strokeColor = [UIColor redColor].CGColor;
-    deaLayer.fillColor = [[UIColor clearColor] CGColor];
-    deaLayer.contentsScale = [UIScreen mainScreen].scale;
-    [self.macdLayer addSublayer:deaLayer];
-    
-    UIBezierPath *diffPath = [UIBezierPath drawLine:self.diffArray];
-    CAShapeLayer *diffLayer = [CAShapeLayer layer];
-    diffLayer.path = diffPath.CGPath;
-    diffLayer.strokeColor = [UIColor blackColor].CGColor;
-    diffLayer.fillColor = [[UIColor clearColor] CGColor];
-    diffLayer.contentsScale = [UIScreen mainScreen].scale;
-    [self.macdLayer addSublayer:diffLayer];
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.contentsScale = UIScreen.mainScreen.scale;
+    layer.strokeColor = color.CGColor;
+    layer.fillColor = filled ? color.CGColor : UIColor.clearColor.CGColor;
+    layer.lineWidth = self.lineWidth;
+    [self.layer addSublayer:layer];
+    return layer;
 }
 
-- (void)removeFromSubLayer
+- (void)setLineWidth:(CGFloat)lineWidth
 {
-    for (NSInteger i = 0 ; i < self.macdLayer.sublayers.count; i++)
+    _lineWidth = lineWidth;
+    _deaLayer.lineWidth = lineWidth;
+    _diffLayer.lineWidth = lineWidth;
+}
+
+#pragma mark - 可视区域
+
+- (void)updateDisplayModels
+{
+    [self.displayModels removeAllObjects];
+    if (self.dataArray.count == 0)
     {
-        CAShapeLayer *layer = (CAShapeLayer*)self.macdLayer.sublayers[i];
-        [layer removeFromSuperlayer];
-        layer = nil;
+        return;
     }
-    [self.macdLayer removeFromSuperlayer];
-    self.macdLayer = nil;
-}
 
-- (void)removeAllObjectFromArray
-{
-    if (self.displayArray.count>0)
+    NSInteger startIndex = MIN(MAX(self.startIndex, 0), (NSInteger)self.dataArray.count - 1);
+    NSInteger length = MIN(self.displayCount, (NSInteger)self.dataArray.count - startIndex);
+    if (length <= 0)
     {
-        [self.displayArray removeAllObjects];
-        [self.macdArray removeAllObjects];
-        [self.deaArray removeAllObjects];
-        [self.diffArray removeAllObjects];
+        return;
     }
+    [self.displayModels addObjectsFromArray:[self.dataArray subarrayWithRange:NSMakeRange(startIndex, length)]];
 }
 
-- (void)initLayer
+- (void)updateValueRange
 {
-    if (!self.macdLayer.sublayers.count)
+    CGFloat maxValue = -CGFLOAT_MAX;
+    CGFloat minValue = CGFLOAT_MAX;
+    for (ZYWMacdModel *model in self.displayModels)
     {
-        [self.layer addSublayer:self.macdLayer];
+        maxValue = MAX(maxValue, MAX(model.dea, MAX(model.diff, model.macd)));
+        minValue = MIN(minValue, MIN(model.dea, MIN(model.diff, model.macd)));
     }
+
+    if (maxValue - minValue < 0.5)
+    {
+        maxValue += 0.5;
+        minValue -= 0.5;
+    }
+
+    self.maxY = maxValue;
+    self.minY = minValue;
+    //scaleY 为每个单位数值对应的点数
+    self.scaleY = (self.height - self.topMargin - self.bottomMargin) / (maxValue - minValue);
 }
 
-#pragma mark setter,getter
+- (CGFloat)yPositionOfValue:(CGFloat)value
+{
+    return (self.maxY - value) * self.scaleY + self.topMargin;
+}
+
+#pragma mark - 绘制
 
 - (void)stockFill
 {
-   
-    [self removeAllObjectFromArray];
-    if (_startIndex + _displayCount > _dataArray.count)
-    {
-         [self.displayArray addObjectsFromArray:[self.dataArray subarrayWithRange:NSMakeRange(_startIndex,_displayCount - 1)]];
-    }
-    
-    else
-    {
-        [self.displayArray addObjectsFromArray:[self.dataArray subarrayWithRange:NSMakeRange(_startIndex,_displayCount)]];
-    }
-    
     [self layoutIfNeeded];
-    [self calcuteMaxAndMinValue];
-    [self calMaModelPosition];
+    [self updateDisplayModels];
+    if (self.displayModels.count == 0)
+    {
+        return;
+    }
+
+    [self updateValueRange];
+
+    CGMutablePathRef risePath = CGPathCreateMutable();
+    CGMutablePathRef fallPath = CGPathCreateMutable();
+    CGMutablePathRef deaPath = CGPathCreateMutable();
+    CGMutablePathRef diffPath = CGPathCreateMutable();
+
+    CGFloat zeroY = [self yPositionOfValue:0.f];
+    CGFloat step = self.candleWidth + self.candleSpace;
+
+    [self.displayModels enumerateObjectsUsingBlock:^(ZYWMacdModel *model, NSUInteger index, BOOL *stop) {
+        CGFloat left = self.leftMargin + (self.startIndex + index) * step;
+        CGFloat centerX = left + self.candleWidth / 2.f;
+
+        //MACD柱
+        CGFloat valueY = [self yPositionOfValue:model.macd];
+        CGFloat height = MAX(fabs(valueY - zeroY), ZYWMacdMinBarHeight);
+        CGRect bar = CGRectMake(left, model.macd > 0 ? zeroY - height : zeroY, self.candleWidth, height);
+        CGPathAddRect(model.macd > 0 ? risePath : fallPath, NULL, bar);
+
+        //DEA 与 DIFF 曲线
+        CGFloat deaY = [self yPositionOfValue:model.dea];
+        CGFloat diffY = [self yPositionOfValue:model.diff];
+        if (index == 0)
+        {
+            CGPathMoveToPoint(deaPath, NULL, centerX, deaY);
+            CGPathMoveToPoint(diffPath, NULL, centerX, diffY);
+        }
+        else
+        {
+            CGPathAddLineToPoint(deaPath, NULL, centerX, deaY);
+            CGPathAddLineToPoint(diffPath, NULL, centerX, diffY);
+        }
+    }];
+
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
-    [self removeFromSubLayer];
-    [self initLayer];
-    [self drawLine];
+    self.riseBarLayer.path = risePath;
+    self.fallBarLayer.path = fallPath;
+    self.deaLayer.path = deaPath;
+    self.diffLayer.path = diffPath;
     [CATransaction commit];
-}
 
-#pragma mark lazyLoad
-
-- (NSMutableArray*)macdArray
-{
-    if (!_macdArray)
-    {
-        _macdArray = [NSMutableArray array];
-    }
-    return _macdArray;
-}
-
-- (NSMutableArray*)deaArray
-{
-    if (!_deaArray)
-    {
-        _deaArray = [NSMutableArray array];
-    }
-    return _deaArray;
-}
-
-- (NSMutableArray*)diffArray
-{
-    if (!_diffArray)
-    {
-        _diffArray = [NSMutableArray array];
-    }
-    return _diffArray;
-}
-
-- (NSMutableArray*)displayArray
-{
-    if (!_displayArray)
-    {
-        _displayArray = [NSMutableArray array];
-    }
-    return _displayArray;
-}
-
-- (CAShapeLayer*)macdLayer
-{
-    if (!_macdLayer)
-    {
-        _macdLayer = [CAShapeLayer layer];
-        _macdLayer.lineWidth = _lineWidth;
-        _macdLayer.strokeColor = [UIColor clearColor].CGColor;
-        _macdLayer.fillColor = [UIColor clearColor].CGColor;
-    }
-    return _macdLayer;
+    CGPathRelease(risePath);
+    CGPathRelease(fallPath);
+    CGPathRelease(deaPath);
+    CGPathRelease(diffPath);
 }
 
 @end
