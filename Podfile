@@ -1,4 +1,4 @@
-platform :ios,'7.0'
+platform :ios,'17.0'
 target "ZYWChart" do
     
 pod 'Masonry'
